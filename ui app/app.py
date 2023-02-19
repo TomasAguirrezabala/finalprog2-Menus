@@ -1,6 +1,10 @@
 import requests as rq
 from os import system
 
+# incio de sesion
+
+
+# menu usuario
 print("---MENU---")
 print("opcion 1: que generos hay")
 opcionmenu1=int(input("decime 1 o 2: "))
@@ -45,8 +49,14 @@ elif opcionmenu1 == 5:
     for peliConPortada in peliPortada:
         print(f'{peliConPortada["nombre"]} con id: {peliConPortada["id"]}, genero: {peliConPortada["generoPeli"]}, portada: {peliConPortada["portada"]}\
 , id del director: {peliConPortada["directorID"]} y del año: {peliConPortada["anio"]}')
-        
-    
+# agregar una peli
+# eliminar una peli
+    # Un usuario registado puede eliminar una película sólo si ésta no tiene comentarios de otros usuarios.
+    # Un usuario registrado puede editar la información de una película ya cargada, pero no puede borrar ni editar comentarios de otros usuarios.
+    # Un usuario no registrado no puede editar ni eliminar películas.
+# modificar una peli
+       
+# menu invitado   
             
 elif opcionmenu1 == 10:
     #PRINTEAR ULTIMAS 10 PELIS
