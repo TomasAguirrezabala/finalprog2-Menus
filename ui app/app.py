@@ -52,6 +52,7 @@ elif opcionmenu1 == 5:
 # agregar una peli
 elif opcionmenu1 == 6:
     peliculaNueva = []
+    # nombre de la peli nueva
     nombrePeliAgregar = input("Ingrese el nombre de la pelicula a agregar: ")
     while nombrePeliAgregar == "" or (len(nombrePeliAgregar)) > 196:
         system ("cls")
@@ -59,7 +60,7 @@ elif opcionmenu1 == 6:
         print("Esa pelicula no existe, o ingreso un nombre vacio")
         print('=====================')
         titulo = input("Ingrese el nombre de la pelicula a agregar: ")
-        
+    # año de la peli nueva
     anioPeliAgregar = input(f"Ingrese el año de estreno para {nombrePeliAgregar}: ")
     while (len(anioPeliAgregar) != 4):
         system("cls")
@@ -67,14 +68,14 @@ elif opcionmenu1 == 6:
         print(f'{anioPeliAgregar} no es valido, debe tener 4 numeros. Ej: 2002')
         print("=====================")
         anioPeliAgregar = input(f"Ingrese el año de estreno para {nombrePeliAgregar}: ")
-        
+    # genero de la peli nueva
     generosData = rq.get('http://127.0.0.1:5000/generos')
     generos = generosData.json()
     for genero in generos:
         print(f'Los generos disponibles son: {genero["generoNombre"]}')    
 
     generoPeliAgregar = input("Que genero quiere?: ")
-    
+    # director de la peli nueva
     directoresData = rq.get("http://127.0.0.1:5000/directores")
     directores = directoresData.json()
     print("Los directores disponibles son: ")
@@ -82,7 +83,7 @@ elif opcionmenu1 == 6:
         print(f'{director["director"]} con id: {director["idDirector"]}')
     
     directorPeliAgregar = input("Que director quiere? Escriba el id del director. Ej: 1. : ")
-    
+    # sinopsis de la peli nueva
     sinopsisPeliAgregar = input(f"Ingrese su sinopsis para {nombrePeliAgregar} ")
     while (sinopsisPeliAgregar == ""):
         system ("cls")
@@ -92,10 +93,13 @@ elif opcionmenu1 == 6:
         sinopsisPeliAgregar = input(f"Ingrese su sinopsis para {nombrePeliAgregar}: ")
         
     imagenPeliAgregar = input(f'Ingrese el URL de la imagen para {nombrePeliAgregar}: ')
-    
+    # peli nueva
     peliAgregar = {"nombre":nombrePeliAgregar, "directorID":directorPeliAgregar, "generoPeli":generoPeliAgregar, "anio":anioPeliAgregar, "id":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar}
+    # paso a json
     dataEnviar = json.dumps(peliAgregar)
+    # si no aclaras el tipo de contenido no te deja
     encabezado = {'Content-type': 'application/json'}
+    # post
     response = rq.post("http://127.0.0.1:5000/peliculas/agregar", data=dataEnviar, headers=encabezado)
     
     print(response.status_code)
@@ -106,7 +110,7 @@ elif opcionmenu1 == 6:
     # Un usuario registrado puede editar la información de una película ya cargada, pero no puede borrar ni editar comentarios de otros usuarios.
     # Un usuario no registrado no puede editar ni eliminar películas.
 # modificar una peli
-
+       
 # menu invitado   
             
 elif opcionmenu1 == 10:
@@ -118,4 +122,3 @@ elif opcionmenu1 == 10:
         for key, value in pelicula.items():
             print(f"{key}: {value}")
         print("\n")
-
