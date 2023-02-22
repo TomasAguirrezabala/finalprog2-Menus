@@ -106,24 +106,16 @@ elif opcionmenu1 == 6:
     # Un usuario registrado puede editar la información de una película ya cargada, pero no puede borrar ni editar comentarios de otros usuarios.
     # Un usuario no registrado no puede editar ni eliminar películas.
 # modificar una peli
-       
+
 # menu invitado   
             
-# elif opcionmenu1 == 10:
-#     #PRINTEAR ULTIMAS 10 PELIS
-#     system("cls")
-#     ult_10_Pelis_Data = rq.get("http://127.0.0.1:5000/pelis")
-#     ult_10_Pelis = ult_10_Pelis_Data.json()
-#     if len(ult_10_Pelis) >= 10:
-#         for i in range(-10, 0):
-#             pelicula_10 = ult_10_Pelis[i]
-#             for key, value in pelicula_10.items():
-#                 print(f"{key}: {value}")
-#             print("\n")
-#     else:
-#         print("Hay menos de 10 peliculas agregadas.")
-#         print("las ultimas agregadas son:")
-#         for pelicula_10 in ult_10_Pelis:
-#             for key,value in pelicula_10.items():
-#                 print(f"{key}: {value}")
-#             print("\n")
+elif opcionmenu1 == 10:
+    #PRINTEAR ULTIMAS 10 PELIS
+    system("cls")
+    ult_10_pelis_data = rq.get("http://127.0.0.1:5000//ultimas_diez_peliculas")
+    ult_10_pelis = ult_10_pelis_data.json()
+    for pelicula in ult_10_pelis:
+        for key, value in pelicula.items():
+            print(f"{key}: {value}")
+        print("\n")
+
