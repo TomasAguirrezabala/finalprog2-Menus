@@ -92,13 +92,14 @@ elif opcionmenu1 == 6:
         sinopsisPeliAgregar = input(f"Ingrese su sinopsis para {nombrePeliAgregar}: ")
         
     imagenPeliAgregar = input(f'Ingrese el URL de la imagen para {nombrePeliAgregar}: ')
-    peliAgregar = {"nombre":nombrePeliAgregar, "directorID":directorPeliAgregar, "generoPeli":generoPeliAgregar, "anio":anioPeliAgregar, "id":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar}
     
-    peliAgregar = rq.post('http://127.0.0.1:5000/peliculas/agregar', json=peliAgregar)
-    mostrarPeliNueva = peliAgregar.text
-    print("=====================")
-    print(mostrarPeliNueva)
-    print("=====================")
+    peliAgregar = {"nombre":nombrePeliAgregar, "directorID":directorPeliAgregar, "generoPeli":generoPeliAgregar, "anio":anioPeliAgregar, "id":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar}
+    dataEnviar = json.dumps(peliAgregar)
+    encabezado = {'Content-type': 'application/json'}
+    response = rq.post("http://127.0.0.1:5000/peliculas/agregar", data=dataEnviar, headers=encabezado)
+    
+    print(response.status_code)
+    print(response.text)
     input('Enter para continuar...')
 # eliminar una peli
     # Un usuario registado puede eliminar una película sólo si ésta no tiene comentarios de otros usuarios.
