@@ -33,6 +33,7 @@ if  opcionmenu1 == 1:
     generos = generosData.json()
     for genero in generos:
         print(f'Los generos disponibles son: {genero["generoNombre"]}')
+    input('Enter para continuar...')
 # muestra las peliculas
 elif opcionmenu1 == 2:
     system("cls")
@@ -41,6 +42,7 @@ elif opcionmenu1 == 2:
     print("Las peliculas disponibles son: ")
     for pelicula in peliculas:
         print(pelicula["nombre"])
+    input('Enter para continuar...')
 # muestra los directores
 elif opcionmenu1 == 3:
     system("cls")
@@ -49,6 +51,7 @@ elif opcionmenu1 == 3:
     print("Los directores disponibles son: ")
     for director in directores:
         print(f'{director["director"]} con id: {director["idDirector"]}')
+    input('Enter para continuar...')
 # muestra las peliculas por un director
 elif opcionmenu1 == 4:
     system("cls")
@@ -58,6 +61,7 @@ elif opcionmenu1 == 4:
     print("Las peliculas de este director son: ")
     for peliDirector in peliculasDirector:
         print(f'{peliDirector["nombre"]} con id: {peliDirector["id"]}, genero: {peliDirector["generoPeli"]} y del año: {peliDirector["anio"]}')
+    input('Enter para continuar...')
 # muestra las peli con portada
 elif opcionmenu1 == 5:
     system("cls")
@@ -67,6 +71,7 @@ elif opcionmenu1 == 5:
     for peliConPortada in peliPortada:
         print(f'{peliConPortada["nombre"]} con id: {peliConPortada["id"]}, genero: {peliConPortada["generoPeli"]}, portada: {peliConPortada["portada"]}\
 , id del director: {peliConPortada["directorID"]} y del año: {peliConPortada["anio"]}')
+    input('Enter para continuar...')
 # agregar una peli
 elif opcionmenu1 == 6:
     peliculaNueva = []
@@ -102,7 +107,7 @@ elif opcionmenu1 == 6:
     
     directorPeliAgregar = input("Que director quiere? Escriba el id del director. Ej: 1. : ")
     # sinopsis de la peli nueva
-    sinopsisPeliAgregar = input(f"Ingrese su sinopsis para {nombrePeliAgregar} ")
+    sinopsisPeliAgregar = input(f"Ingrese su sinopsis para {nombrePeliAgregar}: ")
     while (sinopsisPeliAgregar == ""):
         system ("cls")
         print('=====================')
@@ -112,7 +117,7 @@ elif opcionmenu1 == 6:
         
     imagenPeliAgregar = input(f'Ingrese el URL de la imagen para {nombrePeliAgregar}: ')
     # peli nueva
-    peliAgregar = {"nombre":nombrePeliAgregar, "directorID":directorPeliAgregar, "generoPeli":generoPeliAgregar, "anio":anioPeliAgregar, "id":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar}
+    peliAgregar = {"nombre":nombrePeliAgregar, "directorID":directorPeliAgregar, "generoPeli":generoPeliAgregar, "anio":anioPeliAgregar, "peliculaID":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar,"comentariosID":""}
     # paso a json
     dataEnviar = json.dumps(peliAgregar)
     # si no aclaras el tipo de contenido no te deja
@@ -120,10 +125,33 @@ elif opcionmenu1 == 6:
     # post
     response = rq.post("http://127.0.0.1:5000/peliculas/agregar", data=dataEnviar, headers=encabezado)
     
-    print(response.status_code)
     print(response.text)
     input('Enter para continuar...')
-# eliminar una peli
+    
+elif opcionmenu1 == 7:
+    system("cls")
+    print('=====================')
+    print('Borrar una pelicula')
+    print('=====================')
+    usuarioID = input("ingrese el id de su usuario: ")
+    while int(usuarioID) < 4:   
+        peliculaID = input('Ingrese el id de la peli que quiere borrar(x para salir): ')
+        if peliculaID != 'x':
+            datos = rq.delete(f'http://127.0.0.1:5000/peliculas/{peliculaID}/usuarioID/{usuarioID}/eliminar')
+            mensaje = datos.text
+            print("=====================")
+            print(mensaje)
+            print("=====================")
+        else:
+            system("cls")
+            print("===================================================")
+            print('Usted cancelo la eliminacion')
+            print("===================================================")
+            break
+    else:
+        print("Ese usuario no existe")
+        input('Ingrese enter para continuar...')
+    # eliminar una peli
     # Un usuario registado puede eliminar una película sólo si ésta no tiene comentarios de otros usuarios.
     # Un usuario registrado puede editar la información de una película ya cargada, pero no puede borrar ni editar comentarios de otros usuarios.
     # Un usuario no registrado no puede editar ni eliminar películas.
