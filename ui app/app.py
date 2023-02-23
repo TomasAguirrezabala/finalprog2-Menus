@@ -3,6 +3,24 @@ from os import system
 import json
 # incio de sesion
 
+def modificar_pelicula():
+    opcion_modificar = 0
+    while not(opcion_modificar>=1 and opcion_modificar<=7):
+        system('cls')  
+        print('=====================')
+        print('Modificar Pelicula')
+        print('=====================')
+        print('1) Titulo')
+        print('2) Director')
+        print('3) Genero')
+        print('4) Año')
+        print('5) Portada')
+        print('6) Sinopsis')
+        print('7) Terminar/Salir')
+        print('=====================')
+        opcion_modificar = int(input('Ingresar opcion: '))
+    return opcion_modificar
+
 
 # menu usuario
 print("---MENU---")
@@ -110,15 +128,112 @@ elif opcionmenu1 == 6:
     # Un usuario registrado puede editar la información de una película ya cargada, pero no puede borrar ni editar comentarios de otros usuarios.
     # Un usuario no registrado no puede editar ni eliminar películas.
 # modificar una peli
-       
+
 # menu invitado   
             
 elif opcionmenu1 == 10:
     #PRINTEAR ULTIMAS 10 PELIS
     system("cls")
-    ult_10_pelis_data = rq.get("http://127.0.0.1:5000//ultimas_diez_peliculas")
+    ult_10_pelis_data = rq.get("http://127.0.0.1:5000/ultimas_diez_peliculas")
     ult_10_pelis = ult_10_pelis_data.json()
     for pelicula in ult_10_pelis:
         for key, value in pelicula.items():
             print(f"{key}: {value}")
         print("\n")
+
+elif opcionmenu1 == 11:
+    opcion_modificar = 0
+    encontrar = False
+
+
+    #system('cls')
+    print('*Modificar pelicula*')
+
+    modificar = int(input('Ingrese la ID de la pelicula que desea modificar:'))
+    modificaciones_pelicula = {"nombre": "", "directorID": "", "generoPeli": "", "anio": "", "id": "", "portada": "", "sinopsis": ""}
+    data = rq.get('http://127.0.0.1:5000/pelis')
+    peliculas = data.json()
+    for pelicula in peliculas:
+        if pelicula["id"] == modificar:
+            print(pelicula)
+            encontrar = True
+            while opcion_modificar != 7:
+                opcion_modificar = modificar_pelicula()
+                if opcion_modificar == 1:
+                    while True:
+                        modif = input(f"El titulo a modificar es '{pelicula['nombre']}', Ingrese su nuevo valor: ")
+                        if modif != "":
+                            modificaciones_pelicula["nombre"] = modif
+                            break
+                        else:
+                            print("Es necesario ingresar un valor.")
+                elif opcion_modificar == 2:
+                    contador = 0
+                    while True:
+                        directoresData = rq.get("http://127.0.0.1:5000/directores")
+                        directores = directoresData.json()
+                        print("Los directores disponibles son: ")
+                        for director in directores:
+                            contador = contador + 1
+                            print(f'{director["director"]} con id: {director["idDirector"]}')
+                        modif = int(input(f"El ID del director actual es '{pelicula['directorID']}', Ingrese su nuevo valor: "))
+                        if modif > 0 and modif <= contador:
+                            str(modif)
+                            modificaciones_pelicula["idDirector"] = modif
+                            break
+                        else:
+                            print("error, ingrese un id de director valido.")
+                            input("Enter para continuar...")
+                elif opcion_modificar == 3:
+                    generos_disponibles = []
+                    while True:
+                        generosData = rq.get('http://127.0.0.1:5000/generos')
+                        generos = generosData.json()
+                        print("los generos disponibles son:")
+                        for genero in generos:
+                            generos_disponibles.append(genero["generoNombre"])
+                            print(f'-{genero["generoNombre"]}')
+                        modif = str(input(f"El genero a modificar es '{pelicula['generoPeli']}', Ingrese su nuevo valor: "))
+                        if modif in generos_disponibles:
+                            modificaciones_pelicula["generoPeli"] = modif
+                            break
+                        else:
+                            print("error, ingrese un genero valido.")
+                            input("Enter para continuar...")
+                elif opcion_modificar == 4:
+                    while True:
+                        modif = input(f"El año a modificar es '{pelicula['anio']}', Ingrese su nuevo valor: ")
+                        if len(modif) == 4:
+                            modificaciones_pelicula["anio"] = modif
+                            break
+                        else:
+                            print("El valor d esta casilla debe ser de 4 cifras")
+                elif opcion_modificar == 5:
+                    while True:
+                        modif = input(f"El URL de la portada actual es '{pelicula['portada']}', Ingrese su nuevo valor: ")
+                        if "http" in modif:
+                            modificaciones_pelicula["portada"] = modif
+                            break
+                        else:
+                            print("para editar la portada se debe ingresar una URL.")
+                            input("Enter para continuar...")
+                elif opcion_modificar == 6:
+                    while True:
+                        modif = input(f"La sinopsis actual es '{pelicula['sinopsis']}', Ingrese su nuevo valor: ")
+                        if len(modif) > 0:
+                            modificaciones_pelicula["sinopsis"] = modif
+                            break
+                        else:
+                            print("La sinopsis no puede estar vacia.")
+                elif opcion_modificar == 7:
+                    print("saliendo de *modificar pelicula*")
+                    break
+
+                if opcion_modificar >= 1 and opcion_modificar <=6:
+                    modificaciones_pelicula["id"] = modificar
+                    datos = rq.put(f'http://127.0.0.1:5000/peliculas/modif/', json=modificaciones_pelicula)
+                    mensaje = datos.text
+                    print("=====================")
+                    print(mensaje)
+                    print("=====================")
+                    input('Enter para continuar...')
