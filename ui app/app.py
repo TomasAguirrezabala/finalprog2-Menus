@@ -99,7 +99,8 @@ elif opcionmenu1 == 6:
         
     imagenPeliAgregar = input(f'Ingrese el URL de la imagen para {nombrePeliAgregar}: ')
     # peli nueva
-    peliAgregar = {"nombre":nombrePeliAgregar, "directorID":directorPeliAgregar, "generoPeli":generoPeliAgregar, "anio":anioPeliAgregar, "peliculaID":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar,"comentariosID":""}
+    peliAgregar = {"nombre":nombrePeliAgregar, "directorID":directorPeliAgregar, "generoPeli":generoPeliAgregar,\
+                   "anio":anioPeliAgregar, "peliculaID":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar,"comentariosID":"0"}
     # paso a json
     dataEnviar = json.dumps(peliAgregar)
     # si no aclaras el tipo de contenido no te deja
@@ -109,7 +110,7 @@ elif opcionmenu1 == 6:
     
     print(response.text)
     input('Enter para continuar...')
-    
+# eliminar una peli    
 elif opcionmenu1 == 7:
     system("cls")
     print('=====================')
@@ -133,11 +134,9 @@ elif opcionmenu1 == 7:
     else:
         print("Ese usuario no existe")
         input('Ingrese enter para continuar...')
-    # eliminar una peli
-    # Un usuario registado puede eliminar una película sólo si ésta no tiene comentarios de otros usuarios.
-    # Un usuario registrado puede editar la información de una película ya cargada, pero no puede borrar ni editar comentarios de otros usuarios.
-    # Un usuario no registrado no puede editar ni eliminar películas.
+
 # modificar una peli
+    # Un usuario registrado puede editar la información de una película ya cargada, pero no puede borrar ni editar comentarios de otros usuarios.
        
 # menu invitado   
             
