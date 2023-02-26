@@ -1,7 +1,24 @@
 import requests as rq
 from os import system
 import json
+
 # incio de sesion
+def inicio_de_sesion():
+    system('cls')
+    while True:
+        usuariosData = rq.get("http://127.0.0.1:5000/usuarios")
+        usuarios = usuariosData.json()
+        print('*Iniciar sesión*')
+        input_usuario = input('Ingrese su usuario: ')
+        input_contrasena = input('Ingrese su contraseña: ')
+        for usuario in usuarios:
+            if usuario['usuario'] == input_usuario and usuario['contrasena'] == input_contrasena:
+                print('.Sesion iniciada con exito.')
+                return id
+            else:
+                print('Usuario y/o contraseña incorrecta.')
+                continue
+
 
 def modificar_pelicula():
     opcion_modificar = 0
@@ -17,10 +34,18 @@ def modificar_pelicula():
         opcion_modificar = int(input('Ingresar opcion: '))
     return opcion_modificar
 
-
+inicio_de_sesion()
 # menu usuario
 print("---MENU---")
-print("opcion 1: que generos hay")
+print("1) Mostrar generos disponibles.")
+print("2) Mostrar peliculas disponibles.")
+print("3) Mostrar los directores cargados.")
+print("4) Mostrar peliculas de un director.")
+print("5) Mostrar las peliculas por portada.")
+print("6) Agregar una pelicula.")
+print("7) Eliminar una pelicula.")
+print("8) Modificar una pelicula.")
+print("9) Mostrar las ultimas diez peliculas agregadas.")
 opcionmenu1=int(input("decime 1 o 2: "))
 # muestra los generos
 if  opcionmenu1 == 1:
@@ -148,23 +173,9 @@ elif opcionmenu1 == 7:
     else:
         print("Ese usuario no existe")
         input('Ingrese enter para continuar...')
-
-# modificar una peli
+#editar una pelicula a partir de su ID
     # Un usuario registrado puede editar la información de una película ya cargada, pero no puede borrar ni editar comentarios de otros usuarios.
-       
-# menu invitado   
-            
-elif opcionmenu1 == 10:
-    #PRINTEAR ULTIMAS 10 PELIS
-    system("cls")
-    ult_10_pelis_data = rq.get("http://127.0.0.1:5000/ultimas_diez_peliculas")
-    ult_10_pelis = ult_10_pelis_data.json()
-    for pelicula in ult_10_pelis:
-        for key, value in pelicula.items():
-            print(f"{key}: {value}")
-        print("\n")
-
-elif opcionmenu1 == 11:
+elif opcionmenu1 == 8:
     opcion_modificar = 0
     encontrar = False
 
@@ -272,3 +283,14 @@ elif opcionmenu1 == 11:
                     print(mensaje)
                     print("*")
                     input('Enter para continuar...')
+#muestra las ultimas 10 peliculas agregadas
+elif opcionmenu1 == 10:
+    #PRINTEAR ULTIMAS 10 PELIS
+    system("cls")
+    ult_10_pelis_data = rq.get("http://127.0.0.1:5000/ultimas_diez_peliculas")
+    ult_10_pelis = ult_10_pelis_data.json()
+    for pelicula in ult_10_pelis:
+        for key, value in pelicula.items():
+            print(f"{key}: {value}")
+        print("\n")
+
