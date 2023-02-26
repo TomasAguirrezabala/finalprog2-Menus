@@ -14,10 +14,10 @@ def inicio_de_sesion():
         for usuario in usuarios:
             if usuario['usuario'] == input_usuario and usuario['contrasena'] == input_contrasena:
                 print('.Sesion iniciada con exito.')
-                return id
+                return 0
             else:
                 print('Usuario y/o contraseña incorrecta.')
-                continue
+                continue    
 
 
 def modificar_pelicula():
@@ -34,7 +34,9 @@ def modificar_pelicula():
         opcion_modificar = int(input('Ingresar opcion: '))
     return opcion_modificar
 
+#ACOMODAR el inicio de sesion en un mejor lugar
 inicio_de_sesion()
+
 # menu usuario
 print("---MENU---")
 print("1) Mostrar generos disponibles.")
@@ -46,7 +48,7 @@ print("6) Agregar una pelicula.")
 print("7) Eliminar una pelicula.")
 print("8) Modificar una pelicula.")
 print("9) Mostrar las ultimas diez peliculas agregadas.")
-opcionmenu1=int(input("decime 1 o 2: "))
+opcionmenu1=int(input("ingresar opcion: "))
 # muestra los generos
 if  opcionmenu1 == 1:
     system("cls")
@@ -284,7 +286,7 @@ elif opcionmenu1 == 8:
                     print("*")
                     input('Enter para continuar...')
 #muestra las ultimas 10 peliculas agregadas
-elif opcionmenu1 == 10:
+elif opcionmenu1 == 9:
     #PRINTEAR ULTIMAS 10 PELIS
     system("cls")
     ult_10_pelis_data = rq.get("http://127.0.0.1:5000/ultimas_diez_peliculas")
@@ -293,4 +295,12 @@ elif opcionmenu1 == 10:
         for key, value in pelicula.items():
             print(f"{key}: {value}")
         print("\n")
+
+
+#paginado, funcion para printear por ejemplo 5 o 10 peliculas por pagina.
+#buscador de peliculas, directores.
+#abm usuarios, agregar permiso de admin y usuario publico
+#abm generos y directores
+#sistema de puntuacion, por usuario logueado
+
 
