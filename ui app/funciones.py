@@ -371,8 +371,8 @@ def paginado():
     while j < len(peliculas):
         print(f"*pagina {pagina}*")
         for pelicula  in listPeliculas[i:j]:
-            for key, value in pelicula.items():
-                print(f"{key}: {value}")
+            print(f'{pelicula["nombre"]} con id: {pelicula["peliculaID"]}, genero: {pelicula["generoPeli"]}, del año: {pelicula["anio"]}\
+ y su sinopsis es: {pelicula["sinopsis"]}')
             print("\n")
         opc = input (' "-" para pagina anterior y "+" para siguiente pagina.("x" para salir)')
         if opc == "+":
@@ -390,8 +390,8 @@ def paginado():
     while j >= len(peliculas):
         print(f"*pagina {pagina}*")
         for pelicula  in listPeliculas[i:j]:
-            for key, value in pelicula.items():
-                print(f"{key}: {value}")
+            print(f'{pelicula["nombre"]} con id: {pelicula["peliculaID"]}, genero: {pelicula["generoPeli"]}, del año: {pelicula["anio"]}\
+ y su sinopsis es: {pelicula["sinopsis"]}')
             print("\n")
         opc = input (' "-" para pagina anterior y "+" para siguiente pagina.("x" para salir)')
         if opc == "+":
