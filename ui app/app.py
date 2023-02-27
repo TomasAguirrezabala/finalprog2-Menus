@@ -34,6 +34,54 @@ def modificar_pelicula():
         opcion_modificar = int(input('Ingresar opcion: '))
     return opcion_modificar
 
+def paginado():
+    pelisData = rq.get("http://127.0.0.1:5000/pelis")
+    peliculas = pelisData.json()
+    listPeliculas = list(peliculas)
+    i = 0
+    j = 4
+    pagina = 1
+    opc = ""
+    while j < len(peliculas):
+        print(f"*pagina {pagina}*")
+        for pelicula  in listPeliculas[i:j]:
+            for key, value in pelicula.items():
+                print(f"{key}: {value}")
+            print("\n")
+        opc = input (' "-" para pagina anterior y "+" para siguiente pagina.("x" para salir)')
+        if opc == "+":
+            pagina = pagina + 1
+            i = i + 5
+            j = j + 5
+        elif opc == "-" and i >= 0:
+            pagina = pagina - 1
+            i = i - 5
+            j = j - 5
+        elif opc == "x":
+            return 0
+        elif opc != "x" and opc != "-" and opc != "+" and opc != "":
+            print('solo ingrese "+" o "-".("x" para salir.)')
+    while j >= len(peliculas):
+        print(f"*pagina {pagina}*")
+        for pelicula  in listPeliculas[i:j]:
+            for key, value in pelicula.items():
+                print(f"{key}: {value}")
+            print("\n")
+        opc = input (' "-" para pagina anterior y "+" para siguiente pagina.("x" para salir)')
+        if opc == "+":
+            pagina = pagina + 1
+            i = i + 5
+            j = j + 5
+        elif opc == "-" and i >= 0:
+            pagina = pagina - 1
+            i = i - 5
+            j = j - 5
+        elif opc == "x":
+            return 0
+        elif opc != "x" and opc != "-" and opc != "+" and opc != "":
+            print('solo ingrese "+" o "-".("x" para salir.)')
+        
+
 #ACOMODAR el inicio de sesion en un mejor lugar
 inicio_de_sesion()
 
@@ -295,6 +343,9 @@ elif opcionmenu1 == 9:
         for key, value in pelicula.items():
             print(f"{key}: {value}")
         print("\n")
+elif opcionmenu1 == 10:
+    paginado()
+
 
 
 #paginado, funcion para printear por ejemplo 5 o 10 peliculas por pagina.
