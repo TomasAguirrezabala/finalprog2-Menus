@@ -49,7 +49,8 @@ def inicio_de_sesion():
             print("ID o contraseña incorrectos") 
             input("Enter para continuar.")
         else: 
-            print("Inicio de sesion exitoso!")  
+            print("Inicio de sesion exitoso!") 
+            print() 
             input("Enter para continuar.")
             break
     return idUsuario
@@ -63,7 +64,7 @@ def menuUsuarioResgistrado():
         print("1) Mostrar las peliculas disponibles.")
         print("2) Mostrar las ultimas diez peliculas agregadas.")
         print("3) Mostrar peliculas de un director.")
-        print("4) Mostrar las peliculas por portada.")
+        print("4) Mostrar las peliculas con portada.")
         print("5) Agregar una pelicula.")
         print("6) Eliminar una pelicula.")
         print("7) Modificar una pelicula.")
@@ -84,11 +85,13 @@ def mostrarPelis():
         print()
     enteras = input('Si quieres conocer todos los detalles de las peliculas, ingresa "y", si quieres \
 volver al menu, ingresa "n": ').lower()
+    print()
     if enteras == "y":
         for pelicula in peliculas:
-            print(pelicula)
+            print(f'{pelicula["nombre"]} con id: {pelicula["peliculaID"]}, genero: {pelicula["generoPeli"]}, del año: {pelicula["anio"]}\
+ y su sinopsis es: {pelicula["sinopsis"]}')
             print()
-        print("Enter para continuar.")
+        input("Enter para continuar.")
     else:
         input('Enter para continuar...')
     
@@ -99,30 +102,45 @@ def ultimas10Pelis():
     ult_10_pelis_data = rq.get("http://127.0.0.1:5000/ultimas_diez_peliculas")
     ult_10_pelis = ult_10_pelis_data.json()
     for pelicula in ult_10_pelis:
-        for key, value in pelicula.items():
-            print(f"{key}: {value}")
-        print("\n")  
+        print(f'{pelicula["nombre"]} con id: {pelicula["peliculaID"]}, genero: {pelicula["generoPeli"]}, del año: {pelicula["anio"]}\
+ y su sinopsis es: {pelicula["sinopsis"]}')
+        print()
+    input("Enter para continuar.")     
         
 # muestra las peliculas por un director
 def pelisDirector():
     system("cls")
     directorID = input("Ingrese la id del director: ")
-    peliculasDirectorData = rq.get(f"http://127.0.0.1:5000/peliculas/director/{directorID}")
-    peliculasDirector = peliculasDirectorData.json()
-    print("Las peliculas de este director son: ")
-    for peliDirector in peliculasDirector:
-        print(f'{peliDirector["nombre"]} con id: {peliDirector["id"]}, genero: {peliDirector["generoPeli"]} y del año: {peliDirector["anio"]}')
-    input('Enter para continuar...')   
+    try:
+        peliculasDirectorData = rq.get(f"http://127.0.0.1:5000/peliculas/director/{directorID}")
+        peliculasDirector = peliculasDirectorData.json()
+        print()
+        print("Las peliculas de este director son: ")
+        print()
+        for peliDirector in peliculasDirector:
+            print(f'{peliDirector["nombre"]} con id: {peliDirector["peliculaID"]}, genero: {peliDirector["generoPeli"]}, del año: {peliDirector["anio"]}\
+ y su sinopsis es: {peliDirector["sinopsis"]}')
+            print()
+            input('Enter para continuar...')
+    except rq.exceptions.JSONDecodeError:
+        print()
+        print("Este director no existe o no tiene peliculas para mostrar")         
+        input('Enter para continuar...')   
     
 # muestra las peli con portada
 def peliPortada():
     system("cls")
     peliPortadaData = rq.get("http://127.0.0.1:5000/peliculas/portada")
     peliPortada = peliPortadaData.json()
+    print()
+    print("-----------------------------------")
     print("Las peliculas con portada son: ")
+    print("-----------------------------------")
+    print()
     for peliConPortada in peliPortada:
-        print(f'{peliConPortada["nombre"]} con id: {peliConPortada["id"]}, genero: {peliConPortada["generoPeli"]}, portada: {peliConPortada["portada"]}\
+        print(f'{peliConPortada["nombre"]} con id: {peliConPortada["peliculaID"]}, genero: {peliConPortada["generoPeli"]}, portada: {peliConPortada["portada"]}\
 , id del director: {peliConPortada["directorID"]} y del año: {peliConPortada["anio"]}')
+        print()
     input('Enter para continuar...')           
 
 
@@ -190,7 +208,15 @@ def peliEliminar():
     print('=====================')
     print('Borrar una pelicula')
     print('=====================')
+    pelisData = rq.get("http://127.0.0.1:5000/pelis")
+    peliculas = pelisData.json()
+    print("Las peliculas disponibles son: ")
+    print()
+    for pelicula in peliculas:
+        print(f'#{pelicula["nombre"]} con id: {pelicula["peliculaID"]}')
+        print()
     usuarioID = input("ingrese el id de su usuario: ")
+    print()
     while int(usuarioID) < 4:   
         peliculaID = input('Ingrese el id de la peli que quiere borrar(x para salir): ')
         if peliculaID != 'x':
@@ -211,7 +237,7 @@ def peliEliminar():
 
 def modificar_pelicula():
     opcion_modificar = 0
-    
+    system("cls")
     while not(opcion_modificar>=1 and opcion_modificar<=7): 
         print('Modificar Pelicula')
         print('1) Titulo')
@@ -223,13 +249,20 @@ def modificar_pelicula():
         print('7) Terminar/Salir')
         opcion_modificar = int(input('Ingresar opcion: '))
 
+    pelisData = rq.get("http://127.0.0.1:5000/pelis")
+    peliculas = pelisData.json()
+    print("Las peliculas disponibles son: ")
+    print()
+    for pelicula in peliculas:
+        print(f'#{pelicula["nombre"]} con id: {pelicula["peliculaID"]}')
+        print()
     modificar = int(input('Ingrese la ID de la pelicula que desea modificar: '))
     #peli vacia donde guarda cada cambio para poder hacer mas de 1 cambio antes de enviar los datos
     modificaciones_pelicula = {"nombre": "", "directorID": "", "generoPeli": "", "anio": "", "id": "", "portada": "", "sinopsis": ""}
     data = rq.get('http://127.0.0.1:5000/pelis')
     peliculas = data.json()
     for pelicula in peliculas:
-        if pelicula["id"] == modificar:
+        if pelicula["peliculaID"] == modificar:
             system('cls')
             while opcion_modificar != 7:
                 opcion_modificar = modificar_pelicula()
