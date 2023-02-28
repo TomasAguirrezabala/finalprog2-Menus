@@ -42,24 +42,28 @@ def inicio_de_sesion():
                 continue
         encontrado = False  
         for usuario in usuarios:
-            if usuario['idUsuario'] == input_id and usuario['contrasena'] == input_contrasena:
-                idUsuario = usuario["idUsuario"]
+            if usuario['usuarioID'] == input_id and usuario['contrasena'] == input_contrasena:
+                usuarioID = usuario["usuarioID"]
                 encontrado = True
         if encontrado == False:
+            system("cls")
+            print('*Iniciar sesión*')
             print("ID o contraseña incorrectos") 
             input("Enter para continuar.")
         else: 
+            system("cls")
+            print('*Iniciar sesión*')
             print("Inicio de sesion exitoso!") 
             print() 
             input("Enter para continuar.")
             break
-    return idUsuario
+    return usuarioID
     
 # menu usuario
 def menuUsuarioResgistrado():
     system("cls")
     opcionmenu1 = 0
-    while not(opcionmenu1>=1 and opcionmenu1<=9):
+    while not(opcionmenu1>=1 and opcionmenu1<=10):
         print("---MENU---")
         print("1) Mostrar las peliculas disponibles.")
         print("2) Mostrar las ultimas diez peliculas agregadas.")
@@ -68,10 +72,25 @@ def menuUsuarioResgistrado():
         print("5) Agregar una pelicula.")
         print("6) Eliminar una pelicula.")
         print("7) Modificar una pelicula.")
-        print("8) Salir")
+        print("8) ABM Comentarios")
+        print("9) Paginado de peliculas")
+        print("10) Salir")
         opcionmenu1=int(input("ingresar opcion: "))
     return opcionmenu1
 
+# menu comentarios
+def menuComentarios():
+    opcion = 0
+    while not(opcion>=1 and opcion<=5):
+        system("cls")
+        print('=====================')
+        print("1) Agregar un comentario.")
+        print("2) Eliminar un comentario.")
+        print("3) Editar un comentario.")
+        print("4) Salir")
+        print('=====================')
+        opcion = int(input('Ingrese opcion: '))
+    return opcion
 
 # muestra las peliculas
 def mostrarPelis():
@@ -121,7 +140,7 @@ def pelisDirector():
             print(f'{peliDirector["nombre"]} con id: {peliDirector["peliculaID"]}, genero: {peliDirector["generoPeli"]}, del año: {peliDirector["anio"]}\
  y su sinopsis es: {peliDirector["sinopsis"]}')
             print()
-            input('Enter para continuar...')
+        input('Enter para continuar...')
     except rq.exceptions.JSONDecodeError:
         print()
         print("Este director no existe o no tiene peliculas para mostrar")         
@@ -190,7 +209,11 @@ def peliAgregar():
     imagenPeliAgregar = input(f'Ingrese el URL de la imagen para {nombrePeliAgregar}: ')
     # peli nueva
     peliAgregar = {"nombre":nombrePeliAgregar, "directorID":directorPeliAgregar, "generoPeli":generoPeliAgregar,\
+<<<<<<< HEAD
                 "anio":anioPeliAgregar, "peliculaID":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar,"comentariosID":"0", "puntuacion":"", "puntuaciones":{}}
+=======
+                "anio":anioPeliAgregar, "peliculaID":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar,"comentariosID":[]}
+>>>>>>> 062f5c4e5f30158b4a241d27fdf712e1e96a6ebd
     # paso a json
     dataEnviar = json.dumps(peliAgregar)
     # si no aclaras el tipo de contenido no te deja
@@ -203,7 +226,7 @@ def peliAgregar():
     
     
 # eliminar una peli   
-def peliEliminar():
+def peliEliminar(usuarioID):
     system("cls")
     print('=====================')
     print('Borrar una pelicula')
@@ -215,9 +238,9 @@ def peliEliminar():
     for pelicula in peliculas:
         print(f'#{pelicula["nombre"]} con id: {pelicula["peliculaID"]}')
         print()
-    usuarioID = input("ingrese el id de su usuario: ")
     print()
-    while int(usuarioID) < 4:   
+    
+    while True: 
         peliculaID = input('Ingrese el id de la peli que quiere borrar(x para salir): ')
         if peliculaID != 'x':
             datos = rq.delete(f'http://127.0.0.1:5000/peliculas/{peliculaID}/usuarioID/{usuarioID}/eliminar')
@@ -231,9 +254,6 @@ def peliEliminar():
             print('Usted cancelo la eliminacion')
             print("===================================================")
             break
-    else:
-        print("Ese usuario no existe")
-        input('Ingrese enter para continuar...')
 
 def modificar_pelicula():
     opcion_modificar = 0
@@ -407,6 +427,7 @@ def paginado():
         elif opc != "x" and opc != "-" and opc != "+" and opc != "":
             print('solo ingrese "+" o "-".("x" para salir.)')
 
+<<<<<<< HEAD
 def promedio_puntuacion(id_Peli, peliculas):
     puntos = []
     for pelicula in peliculas:
@@ -467,5 +488,166 @@ def buscar_por_Director_Genero(peliculas, buscar):
 #abm usuarios, agregar permiso de admin y usuario publico
 #abm generos y directores
 #sistema de puntuacion, por usuario logueado. x
+=======
+# empieza ABM comentarios
+# empieza ABM comentarios
+# empieza ABM comentarios
+
+# agregar comentario
+def agregarComentario(usuarioID):
+    system("cls")
+    print("--------------------")
+    print("Agregar un comentario")
+    print("--------------------")
+    pelisData = rq.get("http://127.0.0.1:5000/pelis")
+    peliculas = pelisData.json()
+    print("Las peliculas disponibles son: ")
+    print()
+    for pelicula in peliculas:
+        print(f'#{pelicula["nombre"]} con id: {pelicula["peliculaID"]}')
+        print()
+    print()
+    idPeliAgregar = input("¿A que pelicula le quiere agregar un comentario? Ingrese el ID: ")
+    print()
+    encontrado = False
+    
+    for pelicula in peliculas:
+        if pelicula["peliculaID"] == idPeliAgregar:
+            encontrado = True
+            comentario = input("Ingrese su comentario: ")
+            nuevoComentario={"comentarioID":"","usuarioID":usuarioID,"comentario":comentario}
+            datos = rq.post(f'http://127.0.0.1:5000/pelicula/{idPeliAgregar}/comentarios/agregar', json=nuevoComentario)
+            respuestaFlask = datos.text
+            print("=====================")
+            print(respuestaFlask)
+            print("=====================")
+    
+    if encontrado == False:
+        print("=====================")
+        print('Error al crear el comentario')
+        print("=====================")
+            
+    input('Ingrese enter para continuar...')
+
+# eliminar comentario
+def eliminarComentario(usuarioID):
+    # Obtener los comentarios del usuario
+    comentariosUsuarioData = rq.get(f"http://127.0.0.1:5000/comentarios/usuarioID/{usuarioID}")
+    comentariosUsuario = comentariosUsuarioData.json()
+    
+    # Mostrar los comentarios del usuario
+    if len(comentariosUsuario) != 0:
+        print('Sus comentarios son:')
+        for comentario in comentariosUsuario:
+            print(f"ID: {comentario['comentarioID']}, Comentario: {comentario['comentario']}")
+        
+        # Pedir al usuario que ingrese el ID del comentario que desea eliminar
+        while True:
+            print()
+            comenBorrarID = input("Ingrese el ID del comentario que desea eliminar (0 para salir): ")
+            if comenBorrarID == '0':
+                # Si el usuario ingresa 0, salir de la función
+                return "Usted cancelo la eliminacion"
+            elif comenBorrarID.isdigit():
+                # Si el usuario ingresa un número entero válido, verificar si existe en la lista de comentarios del usuario
+                comentarioEncontrado = False
+                for comentario in comentariosUsuario:
+                    if comentario['comentarioID'] == comenBorrarID:
+                        comentarioEncontrado = True
+                        break
+                
+                if comentarioEncontrado == True:
+                    # Si el comentario existe, enviar una solicitud para eliminarlo
+                    datos = rq.delete(f"http://127.0.0.1:5000/comentarios/{comenBorrarID}/usuarioID/{usuarioID}/borrar")
+                    mensaje = datos.text
+                    print("==================================")
+                    print(mensaje)
+                    print("==================================")
+                    input('Ingrese enter para continuar...')
+                    break
+                else:
+                    print("===================================================")
+                    print('Error, ingresó un número que no es suyo o no existe')
+                    print("===================================================")
+                    input('Ingrese enter para continuar...')
+            else:
+                print("===================================================")
+                print('Error, ingrese un número entero válido')
+                print("===================================================")
+                input('Ingrese enter para continuar...')
+    else:
+        print("=======================")
+        print('No tiene comentarios.')
+        print("=======================")
+        input('Ingrese enter para continuar...')
+
+# modificar comentario
+def modificarComentario(usuarioID):
+    # Obtener los comentarios del usuario
+    comentariosUsuarioData = rq.get(f"http://127.0.0.1:5000/comentarios/usuarioID/{usuarioID}")
+    comentariosUsuario = comentariosUsuarioData.json()
+    
+    # Mostrar los comentarios del usuario
+    if len(comentariosUsuario) != 0:
+        print('Sus comentarios son:')
+        for comentario in comentariosUsuario:
+            print(f"ID: {comentario['comentarioID']}, Comentario: {comentario['comentario']}")
+
+        # Pedir al usuario que ingrese el ID del comentario que desea modificar
+        while True:
+            print()
+            comenEditarID = input("Ingrese el ID del comentario que desea modificar (0 para salir): ")
+            if comenEditarID == '0':
+                # Si el usuario ingresa 0, salir de la función
+                return "Usted cancelo la edicion"
+            elif comenEditarID.isdigit():
+                # Si el usuario ingresa un número entero válido, verificar si existe en la lista de comentarios del usuario
+                comentarioEncontrado = False
+                for comentario in comentariosUsuario:
+                    if comentario['comentarioID'] == comenEditarID:
+                        #pedimos el texto nuevo
+                        while True:
+                            comenModificado = input("Ingrese el comentario nuevo: ")
+                            if comenModificado == "":
+                                print("No puede dejar el comentario vacio.")
+                                continue
+                            else:
+                                comentarioEncontrado = True
+                                break
+                
+                if comentarioEncontrado == True:
+                    # Si el comentario existe, enviar una solicitud para modificarlo
+                    comenEditado = {"comentarioID":comenEditarID,"usuarioID":usuarioID,"comentario":comenModificado}
+                    datos = rq.put(f"http://127.0.0.1:5000/comentarios/modificar", json=comenEditado)
+                    mensaje = datos.text
+                    print("==================================")
+                    print(mensaje)
+                    print("==================================")
+                    input('Ingrese enter para continuar...')
+                    break
+                else:
+                    print("===================================================")
+                    print('Error, ingresó un número que no es suyo o no existe')
+                    print("===================================================")
+                    input('Ingrese enter para continuar...')
+            else:
+                print("===================================================")
+                print('Error, ingrese un número entero válido')
+                print("===================================================")
+                input('Ingrese enter para continuar...')
+    else:
+        print("=======================")
+        print('No tiene comentarios.')
+        print("=======================")
+        input('Ingrese enter para continuar...')
+# termina ABM comentarios
+# termina ABM comentarios
+# termina ABM comentarios
+
+
+# buscador de películas, actores o directores.
+# Implementar ABM de usuarios y capacidad de asignar permisos de administrador o usuario público.
+# Implementar ABM de directores y Géneros.
+>>>>>>> 062f5c4e5f30158b4a241d27fdf712e1e96a6ebd
 
 
