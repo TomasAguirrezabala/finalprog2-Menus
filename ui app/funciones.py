@@ -190,7 +190,7 @@ def peliAgregar():
     imagenPeliAgregar = input(f'Ingrese el URL de la imagen para {nombrePeliAgregar}: ')
     # peli nueva
     peliAgregar = {"nombre":nombrePeliAgregar, "directorID":directorPeliAgregar, "generoPeli":generoPeliAgregar,\
-                "anio":anioPeliAgregar, "peliculaID":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar,"comentariosID":"0"}
+                "anio":anioPeliAgregar, "peliculaID":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar,"comentariosID":"0", "puntuacion":"", "puntuaciones":{}}
     # paso a json
     dataEnviar = json.dumps(peliAgregar)
     # si no aclaras el tipo de contenido no te deja
@@ -407,11 +407,65 @@ def paginado():
         elif opc != "x" and opc != "-" and opc != "+" and opc != "":
             print('solo ingrese "+" o "-".("x" para salir.)')
 
+def promedio_puntuacion(id_Peli, peliculas):
+    puntos = []
+    for pelicula in peliculas:
+        if pelicula["peliculaID"] == id_Peli:
+            for key, value in pelicula.items():
+                if key == "puntuaciones":
+                    for i, p in value.items():
+                        puntos.append(p)
+            pelicula["puntuacion"] = sum(puntos)
 
-#paginado, funcion para printear por ejemplo 5 o 10 peliculas por pagina.
-#buscador de peliculas o directores.
+#falta hacer el post
+def puntuar_peli(idUsuario):
+    pelisData = rq.get("http://127.0.0.1:5000/pelis")
+    peliculas = pelisData.json()
+
+
+    id_Peli = input("ingrese el ID de la pelicula que desea puntuar: ")
+    for pelicula in peliculas:
+        if pelicula["peliculaID"] == id_Peli:
+            puntuacion = int(input("ingrese la puntuacion: "))
+            puntuacion_usuario = {idUsuario : puntuacion}
+            pelicula["puntuaciones"].update(puntuacion_usuario)
+            promedio_puntuacion(id_Peli, peliculas)
+        print(pelicula)
+        input("Enter para volver...")
+
+def buscar_por_Director_Genero(peliculas, buscar):
+    pelisData = rq.get("http://127.0.0.1:5000/pelis")
+    peliculas = pelisData.json()
+
+    peliculas_encontradas = []
+    print("Desea buscar por titulo o por director?")
+    print("1) Por titulo.")
+    print("2) Por director.")
+    opc = input ("Inrese opcion: ")
+    if opc == "1":
+        buscar = input("Ingrese el titulo que busca: ")
+        for pelicula in peliculas:
+            if buscar.lower() in pelicula['titulo'].lower():
+                peliculas_encontradas.append(pelicula)
+        print(peliculas_encontradas)
+        input("Enter para volver...")
+    elif opc == "2":
+        buscar = input("Ingrese el director que busca: ")
+        for pelicula in peliculas:
+            if buscar.lower() in pelicula['director'].lower():
+                peliculas_encontradas.append(pelicula)
+            print(peliculas_encontradas)
+            input("Enter para volver...")
+    else:
+        print("Opcion no valida")
+        input("Enter para continuar...")
+
+
+
+#paginado, funcion para printear por ejemplo 5 o 10 peliculas por pagina. x
+#buscador de peliculas o directores. x
 #abm usuarios, agregar permiso de admin y usuario publico
 #abm generos y directores
-#sistema de puntuacion, por usuario logueado
+#sistema de puntuacion, por usuario logueado. x
 
 

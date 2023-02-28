@@ -25,6 +25,8 @@ while opcionMenu1 != 3:
                 fun.modificar_pelicula()
             if opcion == 8:
                 break
+            if opcion == 9:
+                fun.puntuar_peli(idUsuario)
     if opcionMenu1 == 2:
         fun.ultimas10Pelis()
         print('Cuando finalice de ver las peliculas, presione "enter" para continuar')
