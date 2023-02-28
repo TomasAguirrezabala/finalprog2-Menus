@@ -209,11 +209,7 @@ def peliAgregar():
     imagenPeliAgregar = input(f'Ingrese el URL de la imagen para {nombrePeliAgregar}: ')
     # peli nueva
     peliAgregar = {"nombre":nombrePeliAgregar, "directorID":directorPeliAgregar, "generoPeli":generoPeliAgregar,\
-<<<<<<< HEAD
-                "anio":anioPeliAgregar, "peliculaID":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar,"comentariosID":"0", "puntuacion":"", "puntuaciones":{}}
-=======
-                "anio":anioPeliAgregar, "peliculaID":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar,"comentariosID":[]}
->>>>>>> 062f5c4e5f30158b4a241d27fdf712e1e96a6ebd
+                "anio":anioPeliAgregar, "peliculaID":" ", "portada":imagenPeliAgregar, "sinopsis":sinopsisPeliAgregar,"comentariosID":[], "puntuacion":"", "puntuaciones":{}}
     # paso a json
     dataEnviar = json.dumps(peliAgregar)
     # si no aclaras el tipo de contenido no te deja
@@ -427,7 +423,6 @@ def paginado():
         elif opc != "x" and opc != "-" and opc != "+" and opc != "":
             print('solo ingrese "+" o "-".("x" para salir.)')
 
-<<<<<<< HEAD
 def promedio_puntuacion(id_Peli, peliculas):
     puntos = []
     for pelicula in peliculas:
@@ -488,7 +483,6 @@ def buscar_por_Director_Genero(peliculas, buscar):
 #abm usuarios, agregar permiso de admin y usuario publico
 #abm generos y directores
 #sistema de puntuacion, por usuario logueado. x
-=======
 # empieza ABM comentarios
 # empieza ABM comentarios
 # empieza ABM comentarios
@@ -648,6 +642,5 @@ def modificarComentario(usuarioID):
 # buscador de películas, actores o directores.
 # Implementar ABM de usuarios y capacidad de asignar permisos de administrador o usuario público.
 # Implementar ABM de directores y Géneros.
->>>>>>> 062f5c4e5f30158b4a241d27fdf712e1e96a6ebd
 
 
