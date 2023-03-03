@@ -34,9 +34,9 @@ while opcionMenu1 != 3:
             if opcion == 9:
                 fun.paginado()
             if opcion == 10:
+                fun.puntuar_peli(usuarioID)
+            if opcion == 11:
                 break
-            if opcion == 9:
-                fun.puntuar_peli(idUsuario)
     if opcionMenu1 == 2:
         fun.ultimas10Pelis()
         print('Cuando finalice de ver las peliculas, presione "enter" para continuar')

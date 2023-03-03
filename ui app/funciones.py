@@ -74,7 +74,8 @@ def menuUsuarioResgistrado():
         print("7) Modificar una pelicula.")
         print("8) ABM Comentarios")
         print("9) Paginado de peliculas")
-        print("10) Salir")
+        print("10) Puntuar pelicula.")
+        print("11) Salir.")
         opcionmenu1=int(input("ingresar opcion: "))
     return opcionmenu1
 
@@ -274,7 +275,7 @@ def modificar_pelicula():
         print()
     modificar = int(input('Ingrese la ID de la pelicula que desea modificar: '))
     #peli vacia donde guarda cada cambio para poder hacer mas de 1 cambio antes de enviar los datos
-    modificaciones_pelicula = {"nombre": "", "directorID": "", "generoPeli": "", "anio": "", "id": "", "portada": "", "sinopsis": ""}
+    modificaciones_pelicula = {"nombre": "", "directorID": "", "generoPeli": "", "anio": "", "peliculaID": "", "portada": "", "sinopsis": ""}
     data = rq.get('http://127.0.0.1:5000/pelis')
     peliculas = data.json()
     for pelicula in peliculas:
@@ -368,7 +369,7 @@ def modificar_pelicula():
                     break
 
                 if opcion_modificar >= 1 and opcion_modificar <=6:
-                    modificaciones_pelicula["id"] = modificar
+                    modificaciones_pelicula["peliculaID"] = modificar
                     datos = rq.put(f'http://127.0.0.1:5000/peliculas/modif/', json=modificaciones_pelicula)
                     mensaje = datos.text
                     print("*")
@@ -434,7 +435,7 @@ def promedio_puntuacion(id_Peli, peliculas):
             pelicula["puntuacion"] = sum(puntos)
 
 #falta hacer el post
-def puntuar_peli(idUsuario):
+def puntuar_peli(usuarioID):
     pelisData = rq.get("http://127.0.0.1:5000/pelis")
     peliculas = pelisData.json()
 
@@ -443,11 +444,23 @@ def puntuar_peli(idUsuario):
     for pelicula in peliculas:
         if pelicula["peliculaID"] == id_Peli:
             puntuacion = int(input("ingrese la puntuacion: "))
-            puntuacion_usuario = {idUsuario : puntuacion}
-            pelicula["puntuaciones"].update(puntuacion_usuario)
-            promedio_puntuacion(id_Peli, peliculas)
-        print(pelicula)
-        input("Enter para volver...")
+            puntuacion_usuario = {usuarioID : puntuacion}
+            if usuarioID not in pelicula["puntuaciones"]:
+                pelicula["puntuaciones"].update(puntuacion_usuario)
+                promedio_puntuacion(id_Peli, peliculas)
+                #guardar peliculas en peliculas.json
+                # paso a json
+                datos = rq.put(f"http://127.0.0.1:5000/peliculas/puntuar", json=peliculas)
+                print("Pelicula puntuada con exito.")
+                input("Enter para continuar.")
+                break
+            else:
+                print("Usted ya puntuó esta pelicula.")
+                input("Enter para continuar.")
+                break
+        if id_Peli not in peliculas:
+            print("error al encontrar la pelicula.")
+            input("Enter para volver...")
 
 def buscar_por_Director_Genero(peliculas, buscar):
     pelisData = rq.get("http://127.0.0.1:5000/pelis")
@@ -463,15 +476,21 @@ def buscar_por_Director_Genero(peliculas, buscar):
         for pelicula in peliculas:
             if buscar.lower() in pelicula['titulo'].lower():
                 peliculas_encontradas.append(pelicula)
-        print(peliculas_encontradas)
+        for peli in peliculas_encontradas:
+            print(f'{peli["nombre"]} con id: {peli["peliculaID"]}, genero: {peli["generoPeli"]}, del año: {peli["anio"]}\
+y su sinopsis es: {peli["sinopsis"]}')
         input("Enter para volver...")
-    elif opc == "2":
-        buscar = input("Ingrese el director que busca: ")
-        for pelicula in peliculas:
-            if buscar.lower() in pelicula['director'].lower():
-                peliculas_encontradas.append(pelicula)
-            print(peliculas_encontradas)
-            input("Enter para volver...")
+
+        #hay que importar el json de directores y buscar por ID
+#     elif opc == "2":
+#         buscar = input("Ingrese el director que busca: ")
+#         for pelicula in peliculas:
+#             if buscar.lower() in pelicula['directorID'].lower():
+#                 peliculas_encontradas.append(pelicula)
+#         for peli in peliculas_encontradas:
+#             print(f'{peli["nombre"]} con id: {peli["peliculaID"]}, genero: {peli["generoPeli"]}, del año: {peli["anio"]}\
+# y su sinopsis es: {peli["sinopsis"]}')
+#         input("Enter para volver...")
     else:
         print("Opcion no valida")
         input("Enter para continuar...")
