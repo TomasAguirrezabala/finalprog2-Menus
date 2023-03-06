@@ -44,6 +44,7 @@ def inicio_de_sesion():
         for usuario in usuarios:
             if usuario['usuarioID'] == input_id and usuario['contrasena'] == input_contrasena:
                 usuarioID = usuario["usuarioID"]
+                admin = usuario["admin"]
                 encontrado = True
         if encontrado == False:
             system("cls")
@@ -57,13 +58,13 @@ def inicio_de_sesion():
             print() 
             input("Enter para continuar.")
             break
-    return usuarioID
+    return usuarioID, admin
     
 # menu usuario
 def menuUsuarioResgistrado():
     system("cls")
     opcionmenu1 = 0
-    while not(opcionmenu1>=1 and opcionmenu1<=10):
+    while not(opcionmenu1>=1 and opcionmenu1<=12):
         print("---MENU---")
         print("1) Mostrar las peliculas disponibles.")
         print("2) Mostrar las ultimas diez peliculas agregadas.")
@@ -75,7 +76,9 @@ def menuUsuarioResgistrado():
         print("8) ABM Comentarios")
         print("9) Paginado de peliculas")
         print("10) Puntuar pelicula.")
-        print("11) Salir.")
+        print("11) Agregar usuario.")   
+        print("12) Eliminar usuario.") 
+        print("13) Salir.")
         opcionmenu1=int(input("ingresar opcion: "))
     return opcionmenu1
 
@@ -657,6 +660,97 @@ def modificarComentario(usuarioID):
 # termina ABM comentarios
 # termina ABM comentarios
 
+# empieza abm usuario
+# empieza abm usuario
+# empieza abm usuario
+
+def agregarUsuario():
+    system("cls")
+    print("--------------------")
+    print("Registrar un Usuario")
+    print("--------------------")
+    while True:
+        nombreUsuarioNuevo = input("Ingresa el nombre del nuevo usuario: ")
+        contraUsuarioNuevo = input("Ingresa la contraseña del nuevo usuario: ")
+        if nombreUsuarioNuevo == "" or contraUsuarioNuevo == "":
+            print("No debes dejar ningun campo vacio")
+            input("Enter para continuar.")
+        else: 
+            nuevoUsuario = {f"usuario":nombreUsuarioNuevo,"contrasena":contraUsuarioNuevo,"usuarioID":"","admin":False}
+            datos = rq.post('http://127.0.0.1:5000/usuarios/abm', json=nuevoUsuario)
+            respuestaFlask = datos.text
+            print("=====================")
+            print(respuestaFlask)
+            print("=====================")
+            input("Enter para continuar.")
+            break
+
+def eliminarUsuario(admin):
+    system("cls")
+    print("--------------------")
+    print("Eliminar un Usuario")
+    print("--------------------")
+    esAdmin = False 
+    if admin == True:
+        esAdmin = True
+    else:
+        esAdmin=False
+        
+    if esAdmin == False:
+        print("Solo los administradores pueden eliminar un usuario")
+        input("Enter para continuar.")
+    else:
+        usuariosData = rq.get("http://127.0.0.1:5000/usuarios")
+        usuarios = usuariosData.json()
+        for usuario in usuarios:
+            print('Los usuarios disponibles son: ')
+            print(f'Usuario: {usuario["usuario"]}')
+            print(f'ID: {usuario["usuarioID"]}')
+    # Pedir al usuario que ingrese el ID del usuario que desea eliminar
+    while True:
+        print()
+        usuarioBorrarID = input("Ingrese el ID del usuario que desea eliminar (0 para salir): ")
+        if usuarioBorrarID == '0':
+            # Si el usuario ingresa 0, salir de la función
+            return "Usted cancelo la eliminacion"
+        elif usuarioBorrarID.isdigit():
+            # Si el usuario ingresa un número entero válido, verificar si existe en la lista de usuarios
+            usuarioEncontrado = False
+            for usuario in usuarios:
+                if usuario['usuarioID'] == usuarioBorrarID:
+                    usuarioEncontrado = True
+                    break
+            
+            if usuarioEncontrado == True:
+                # Si el usuario existe, enviar una solicitud para eliminarlo
+                encabezado = {"Content-Type":"application/json"}
+                datos = rq.delete(f"http://127.0.0.1:5000/usuarios/abm", headers=encabezado)
+                mensaje = datos.text
+                print("==================================")
+                print(mensaje)
+                print("==================================")
+                input('Ingrese enter para continuar...')
+                break
+            else:
+                print("===================================================")
+                print('Error, ingresó un número que no es suyo o no existe')
+                print("===================================================")
+                input('Ingrese enter para continuar...')
+        else:
+            print("===================================================")
+            print('Error, ingrese un número entero válido')
+            print("===================================================")
+            input('Ingrese enter para continuar...')
+    
+
+            
+    
+        
+    
+# empieza abm usuario
+# empieza abm usuario
+# empieza abm usuario
+    
 
 # buscador de películas, actores o directores.
 # Implementar ABM de usuarios y capacidad de asignar permisos de administrador o usuario público.
