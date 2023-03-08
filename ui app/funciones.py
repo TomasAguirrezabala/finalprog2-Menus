@@ -615,7 +615,8 @@ def modificarComentario(usuarioID):
             comenEditarID = input("Ingrese el ID del comentario que desea modificar (0 para salir): ")
             if comenEditarID == '0':
                 # Si el usuario ingresa 0, salir de la función
-                return "Usted cancelo la edicion"
+                print("Usted cancelo la edicion")
+                
             elif comenEditarID.isdigit():
                 # Si el usuario ingresa un número entero válido, verificar si existe en la lista de comentarios del usuario
                 comentarioEncontrado = False
@@ -699,8 +700,9 @@ def eliminarUsuario(admin):
     if esAdmin == False:
         print("Solo los administradores pueden eliminar un usuario")
         input("Enter para continuar.")
+        return
     else:
-        usuariosData = rq.get("http://127.0.0.1:5000/usuarios")
+        usuariosData = rq.get('http://127.0.0.1:5000/usuarios')
         usuarios = usuariosData.json()
         for usuario in usuarios:
             print('Los usuarios disponibles son: ')
@@ -712,7 +714,9 @@ def eliminarUsuario(admin):
         usuarioBorrarID = input("Ingrese el ID del usuario que desea eliminar (0 para salir): ")
         if usuarioBorrarID == '0':
             # Si el usuario ingresa 0, salir de la función
-            return "Usted cancelo la eliminacion"
+            print("Usted cancelo la eliminacion")
+            input("Enter para continuar.")
+            return
         elif usuarioBorrarID.isdigit():
             # Si el usuario ingresa un número entero válido, verificar si existe en la lista de usuarios
             usuarioEncontrado = False
@@ -724,7 +728,7 @@ def eliminarUsuario(admin):
             if usuarioEncontrado == True:
                 # Si el usuario existe, enviar una solicitud para eliminarlo
                 encabezado = {"Content-Type":"application/json"}
-                datos = rq.delete(f"http://127.0.0.1:5000/usuarios/abm", headers=encabezado)
+                datos = rq.delete(f"http://127.0.0.1:5000/usuarios/{usuarioBorrarID}/eliminar", headers=encabezado)
                 mensaje = datos.text
                 print("==================================")
                 print(mensaje)
@@ -733,7 +737,7 @@ def eliminarUsuario(admin):
                 break
             else:
                 print("===================================================")
-                print('Error, ingresó un número que no es suyo o no existe')
+                print('Error, ingresó un número que no existe')
                 print("===================================================")
                 input('Ingrese enter para continuar...')
         else:

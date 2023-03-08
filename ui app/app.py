@@ -7,9 +7,6 @@ while opcionMenu1 != 3:
     opcionMenu1 = fun.menuInicial()
     if opcionMenu1 == 1:
         usuarioID, admin = fun.inicio_de_sesion()
-        print (usuarioID)
-        print(admin)
-        input("enter oar continuar")
         while True:
             opcion = fun.menuUsuarioResgistrado()
             if opcion == 1:
