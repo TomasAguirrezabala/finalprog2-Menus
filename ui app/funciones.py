@@ -1,6 +1,7 @@
 import requests as rq
 from os import system
 import json
+import random
 
 
 
@@ -63,7 +64,7 @@ def inicio_de_sesion():
 def menuUsuarioResgistrado():
     system("cls")
     opcionmenu1 = 0
-    while not(opcionmenu1>=1 and opcionmenu1<=13):
+    while not(opcionmenu1>=1 and opcionmenu1<=16):
         print("---MENU---")
         print("1) Mostrar las peliculas disponibles.")
         print("2) Mostrar las ultimas diez peliculas agregadas.")
@@ -77,7 +78,11 @@ def menuUsuarioResgistrado():
         print("10) Puntuar pelicula.")
         print("11) Agregar usuario.")   
         print("12) Eliminar usuario.") 
-        print("13) Salir.")
+        print("13) Dar admin")
+        print("14) Sacar admin")
+        print("15) Pelicula aleatoria!")
+        print("16) Mostrar visualizaciones por pelicula")
+        print("17) Salir.")
         opcionmenu1=int(input("ingresar opcion: "))
     return opcionmenu1
 
@@ -455,6 +460,12 @@ def puntuar_peli(usuarioID):
     pelisData = rq.get("http://127.0.0.1:5000/pelis")
     peliculas = pelisData.json()
     system("cls")
+    system("cls")
+    print("Las peliculas disponibles son: ")
+    print()
+    for pelicula in peliculas:
+        print(f"{pelicula['nombre']}" + " ID: "+ f"{pelicula['peliculaID']}")
+        print("-------------")
 
     id_peli = input("Ingrese el ID de la película que desea puntuar: ")
     for pelicula in peliculas:
@@ -525,12 +536,6 @@ def buscar_pelicula_o_director():
         input("Presione Enter para continuar...")
 
 
-
-#paginado, funcion para printear por ejemplo 5 o 10 peliculas por pagina. x
-#buscador de peliculas o directores. x
-#abm usuarios, agregar permiso de admin y usuario publico
-#abm generos y directores
-#sistema de puntuacion, por usuario logueado. x
 # empieza ABM comentarios
 # empieza ABM comentarios
 # empieza ABM comentarios
@@ -730,8 +735,8 @@ def eliminarUsuario(admin):
     else:
         usuariosData = rq.get('http://127.0.0.1:5000/usuarios')
         usuarios = usuariosData.json()
+        print('Los usuarios disponibles son: ')
         for usuario in usuarios:
-            print('Los usuarios disponibles son: ')
             print(f'Usuario: {usuario["usuario"]}')
             print(f'ID: {usuario["usuarioID"]}')
     # Pedir al usuario que ingrese el ID del usuario que desea eliminar
@@ -772,10 +777,188 @@ def eliminarUsuario(admin):
             print("===================================================")
             input('Ingrese enter para continuar...')
 
-# empieza abm usuario
-# empieza abm usuario
-# empieza abm usuario
+def darAdmin(admin):
+    system("cls")
+    print("--------------------")
+    print("Hacer Admin a un Usuario")
+    print("--------------------")
+    
+    esAdmin = False 
+    
+    if admin == True:
+        esAdmin = True
+    else:
+        esAdmin=False
+        
+    if esAdmin == False:
+        print("Solo los administradores pueden hacer admin a un usuario")
+        input("Enter para continuar.")
+        return
+    else:
+        print("Lista de usuarios: ")
+        usuariosData = rq.get('http://127.0.0.1:5000/usuarios')
+        usuarios = usuariosData.json()
+        for usuario in usuarios:
+            print(f'Usuario: {usuario["usuario"]}')
+            print(f'ID: {usuario["usuarioID"]}')
+            
+        # Pedir al usuario que ingrese el ID del usuario que desea hacer admin
+    while True:
+        print()
+        nuevoAdminID = input("Ingrese el ID del usuario que desea dar admin (0 para salir): ")
+        if nuevoAdminID == '0':
+            # Si el usuario ingresa 0, salir de la función
+            print("Usted cancelo la accion")
+            input("Enter para continuar.")
+            return
+        elif nuevoAdminID.isdigit():
+            # Si el usuario ingresa un número entero válido, verificar si existe en la lista de usuarios
+            usuarioEncontrado = False
+            for usuario in usuarios:
+                if usuario['usuarioID'] == nuevoAdminID:
+                    usuarioEncontrado = True
+                    break
+            
+            if usuarioEncontrado == True:
+                # Si el usuario existe, enviar una solicitud para hacerlo admin
+                encabezado = {"Content-Type":"application/json"}
+                datos = rq.put(f"http://127.0.0.1:5000/usuarios/admin/{nuevoAdminID}", headers=encabezado)
+                mensaje = datos.text
+                print("==================================")
+                print(mensaje)
+                print("==================================")
+                input('Ingrese enter para continuar...')
+                break
+            else:
+                print("===================================================")
+                print('Error, ingresó un número que no existe')
+                print("===================================================")
+                input('Ingrese enter para continuar...')
+        else:
+            print("===================================================")
+            print('Error, ingrese un número entero válido')
+            print("===================================================")
+            input('Ingrese enter para continuar...')
 
-# buscador de películas, actores o directores.
-# Implementar ABM de usuarios y capacidad de asignar permisos de administrador o usuario público.
+def sacarAdmin(admin):
+    system("cls")
+    print("--------------------")
+    print("Quitar Admin a un Usuario")
+    print("--------------------")
+    
+    esAdmin = False 
+    
+    if admin == True:
+        esAdmin = True
+    else:
+        esAdmin=False
+        
+    if esAdmin == False:
+        print("Solo los administradores pueden quitar el admin a un usuario")
+        input("Enter para continuar.")
+        return
+    else:
+        print("Lista de usuarios: ")
+        usuariosData = rq.get('http://127.0.0.1:5000/usuarios')
+        usuarios = usuariosData.json()
+        for usuario in usuarios:
+            print(f'Usuario: {usuario["usuario"]}')
+            print(f'ID: {usuario["usuarioID"]}')
+            
+        # Pedir al usuario que ingrese el ID del usuario al que le desea quitar el admin
+    while True:
+        print()
+        exAdminID = input("Ingrese el ID del usuario al que desea quitar el admin (0 para salir): ")
+        if exAdminID == '0':
+            # Si el usuario ingresa 0, salir de la función
+            print("Usted cancelo la accion")
+            input("Enter para continuar.")
+            return
+        elif exAdminID.isdigit():
+            # Si el usuario ingresa un número entero válido, verificar si existe en la lista de usuarios
+            usuarioEncontrado = False
+            for usuario in usuarios:
+                if usuario['usuarioID'] == exAdminID:
+                    usuarioEncontrado = True
+                    break
+            
+            if usuarioEncontrado == True:
+                # Si el usuario existe, enviar una solicitud para sacarle admin
+                encabezado = {"Content-Type":"application/json"}
+                datos = rq.put(f"http://127.0.0.1:5000/usuarios/admin/eliminar/{exAdminID}", headers=encabezado)
+                mensaje = datos.text
+                print("==================================")
+                print(mensaje)
+                print("==================================")
+                input('Ingrese enter para continuar...')
+                break
+            else:
+                print("===================================================")
+                print('Error, ingresó un número que no existe')
+                print("===================================================")
+                input('Ingrese enter para continuar...')
+        else:
+            print("===================================================")
+            print('Error, ingrese un número entero válido')
+            print("===================================================")
+            input('Ingrese enter para continuar...')
+             
+# termina abm usuario
+# termina abm usuario
+# termina abm usuario
+
+def peliculaAleatoria():
+    system("cls")
+    pelisData = rq.get("http://127.0.0.1:5000/pelis")
+    peliculas = pelisData.json()
+    peliAleatoria = random.choice(peliculas)
+    print("Pelicula Aleatoria: ")
+    print(f'{peliAleatoria["nombre"]} con id: {peliAleatoria["peliculaID"]}, genero: {peliAleatoria["generoPeli"]}, del año: {peliAleatoria["anio"]}\
+y su sinopsis es: {peliAleatoria["sinopsis"]}')
+    input("Enter para continuar...")
+ 
+ 
+def mostrarVisualizaciones():
+    system("cls")
+    print("--------------------")
+    print("Visualizaciones por pelicula")
+    print("--------------------")
+    pelisData = rq.get("http://127.0.0.1:5000/pelis")
+    peliculas = pelisData.json()
+    for pelicula in peliculas:
+        print("nombre: "f"{pelicula['nombre']}")
+        print("ID: "f"{pelicula['peliculaID']}")
+        print("Visualizaciones: "f"{pelicula['visualizaciones']}")
+        print()
+    input("Enter para continuar...")    
+    
+#abm generos y directores
+#abm generos y directores
+#abm generos y directores
+def menuDirector():
+    opcionMenuDirector = 1
+    return opcionMenuDirector
+def agregarDirector():
+    return
+def eliminarDirector():
+    return
+def modificarDirector():
+    return
+def menuGenero():
+    opcionMenuGenero = 1
+    return opcionMenuGenero
+def agregarGenero():
+    return
+def eliminarGenero():
+    return
+def modificarGenero():
+    return
+#abm generos y directores   
+#abm generos y directores
+#abm generos y directores
+    
+
+
+
+
 # Implementar ABM de directores y Géneros.

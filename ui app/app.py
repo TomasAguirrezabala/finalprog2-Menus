@@ -40,6 +40,30 @@ while opcionMenu1 != 3:
             if opcion == 12:
                 fun.eliminarUsuario(admin)
             if opcion == 13:
+                fun.darAdmin(admin)
+            if opcion == 14:
+                fun.sacarAdmin(admin)
+            if opcion == 15:
+                fun.peliculaAleatoria()
+            if opcion == 16:
+                fun.mostrarVisualizaciones()
+            if opcion == 17:
+                opcionDirector = fun.menuDirector()
+                if opcionDirector == 1:
+                    print("Aca se agrega un director")
+                elif opcionDirector == 2:
+                    print("Aca se elimina un director")
+                elif opcionDirector == 3:
+                    print("Aca se modifica un director")
+            if opcion == 18:
+                opcionGenero = fun.menuGenero()
+                if opcionGenero == 1:
+                    print("Aca se agrega un genero")
+                elif opcionGenero == 2:
+                    print("Aca se elimina un genero")
+                elif opcionGenero == 3:
+                    print("Aca se modifica un genero")        
+            if opcion == 19:
                 break
     if opcionMenu1 == 2:
         fun.ultimas10Pelis()
