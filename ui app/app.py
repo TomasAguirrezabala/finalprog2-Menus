@@ -32,7 +32,7 @@ while opcionMenu1 != 3:
                 elif opcionComen == 3:
                     fun.modificarComentario(usuarioID)    
             if opcion == 9:
-                fun.paginado()
+                fun.buscar_pelicula_o_director()
             if opcion == 10:
                 fun.puntuar_peli(usuarioID)
             if opcion == 11:
