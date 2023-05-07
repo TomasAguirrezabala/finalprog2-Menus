@@ -64,7 +64,7 @@ def inicio_de_sesion():
 def menuUsuarioResgistrado():
     system("cls")
     opcionmenu1 = 0
-    while not(opcionmenu1>=1 and opcionmenu1<=12):
+    while not(opcionmenu1>=1 and opcionmenu1<=13):
         print("---MENU---")
         print("1) Mostrar las peliculas disponibles.")
         print("2) Mostrar las ultimas diez peliculas agregadas.")
