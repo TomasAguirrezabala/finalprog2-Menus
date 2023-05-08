@@ -64,7 +64,7 @@ def inicio_de_sesion():
 def menuUsuarioResgistrado():
     system("cls")
     opcionmenu1 = 0
-    while not(opcionmenu1>=1 and opcionmenu1<=16):
+    while not(opcionmenu1>=1 and opcionmenu1<=19):
         print("---MENU---")
         print("1) Mostrar las peliculas disponibles.")
         print("2) Mostrar las ultimas diez peliculas agregadas.")
@@ -82,7 +82,9 @@ def menuUsuarioResgistrado():
         print("14) Sacar admin")
         print("15) Pelicula aleatoria!")
         print("16) Mostrar visualizaciones por pelicula")
-        print("17) Salir.")
+        print("17) ABM Directores")
+        print("18) ABM Generos")
+        print("19) Salir.")
         opcionmenu1=int(input("ingresar opcion: "))
     return opcionmenu1
 
@@ -936,10 +938,43 @@ def mostrarVisualizaciones():
 #abm generos y directores
 #abm generos y directores
 def menuDirector():
-    opcionMenuDirector = 1
-    return opcionMenuDirector
+    system("cls")
+    opcionMenuDirector = 0
+    while not(opcionMenuDirector>=1 and opcionMenuDirector<=3):
+        print("--------------------")
+        print("Menu ABM Directores")
+        print("--------------------")
+        print("1) Agregar un Director")
+        print("2) Eliminar un Director")
+        print("3) Modificar un director")
+        opcionMenuDirector=int(input("ingresar opcion: "))
+        return opcionMenuDirector
+
+
 def agregarDirector():
-    return
+    system("cls")
+    print("--------------------")
+    print("Registrar un Director")
+    print("--------------------")
+    while True:
+        directorNuevo = input("Ingresa el nombre del nuevo director(0 para salir): ")
+        if directorNuevo == "":
+            print("No debes dejar ningun campo vacio")
+            input("Enter para continuar.")
+        elif directorNuevo == 0:
+            print("Usted cancelo la accion.")
+            input("Enter para continuar...")
+            break
+        else: 
+            nuevoDirector = {f"director":directorNuevo,"idDirector": "idvacio"}
+            datos = rq.post('http://127.0.0.1:5000/director/crear', json=nuevoDirector)
+            respuestaFlask = datos.text
+            print("=====================")
+            print(respuestaFlask)
+            print("=====================")
+            input("Enter para continuar.")
+            break
+    
 def eliminarDirector():
     return
 def modificarDirector():
