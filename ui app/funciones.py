@@ -479,7 +479,7 @@ def puntuar_peli(usuarioID):
             if 0 <= puntuacion <= 5:
                 pelicula["puntuaciones"][usuarioID] = puntuacion
                 promedio_puntuacion(id_peli, peliculas)
-                datos = rq.put(f"http://127.0.0.1:5000/peliculas/actualizar", json=peliculas)
+                rq.put(f"http://127.0.0.1:5000/peliculas/actualizar", json=peliculas)
                 print("Película puntuada con éxito.")
             else:
                 print("La puntuación ingresada debe ser de 0 a 5.")
@@ -509,7 +509,7 @@ def buscar_pelicula_o_director():
             if buscar.lower() in pelicula['nombre'].lower():
                 if buscar.lower() in pelicula['nombre'].lower():
                     pelicula["visualizaciones"] = pelicula["visualizaciones"] + 1
-                    datos = rq.put(f"http://127.0.0.1:5000/peliculas/actualizar", json=pelisData)
+                    rq.put(f"http://127.0.0.1:5000/peliculas/actualizar", json=pelisData)
                 peliculas_encontradas.append(pelicula)
         if peliculas_encontradas:
             print(f'Se encontraron {len(peliculas_encontradas)} películas:')
@@ -902,7 +902,7 @@ def sacarAdmin(admin):
             print('Error, ingrese un número entero válido')
             print("===================================================")
             input('Ingrese enter para continuar...')
-             
+
 # termina abm usuario
 # termina abm usuario
 # termina abm usuario
@@ -916,8 +916,8 @@ def peliculaAleatoria():
     print(f'{peliAleatoria["nombre"]} con id: {peliAleatoria["peliculaID"]}, genero: {peliAleatoria["generoPeli"]}, del año: {peliAleatoria["anio"]}\
 y su sinopsis es: {peliAleatoria["sinopsis"]}')
     input("Enter para continuar...")
- 
- 
+
+
 def mostrarVisualizaciones():
     system("cls")
     print("--------------------")
