@@ -50,7 +50,7 @@ while opcionMenu1 != 3:
             if opcion == 17:
                 opcionDirector = fun.menuDirector()
                 if opcionDirector == 1:
-                    print("Aca se agrega un director")
+                    fun.agregarDirector()
                 elif opcionDirector == 2:
                     print("Aca se elimina un director")
                 elif opcionDirector == 3:
