@@ -185,72 +185,77 @@ def peliPortada():
 
 # agregar una peli
 def peliAgregar():
-    peliculaNueva = []
     # nombre de la peli nueva
     nombrePeliAgregar = input("Ingrese el nombre de la pelicula a agregar: ")
-    while nombrePeliAgregar == "" or (len(nombrePeliAgregar)) > 196:
-        system ("cls")
-        print('=====================')
-        print("Esa pelicula no existe, o ingreso un nombre vacio")
-        print('=====================')
-        titulo = input("Ingrese el nombre de la pelicula a agregar: ")
-    # año de la peli nueva
-    anioPeliAgregar = input(f"Ingrese el año de estreno para {nombrePeliAgregar}: ")
-    while (len(anioPeliAgregar) != 4):
-        system("cls")
-        print("=====================")
-        print(f'{anioPeliAgregar} no es valido, debe tener 4 numeros. Ej: 2002')
-        print("=====================")
-        anioPeliAgregar = input(f"Ingrese el año de estreno para {nombrePeliAgregar}: ")
-    # genero de la peli nueva
-    generosData = rq.get('http://127.0.0.1:5000/generos')
-    generos = generosData.json()
-    for genero in generos:
-        print(f'Los generos disponibles son: {genero["generoNombre"]}')    
+    while True:
+        if nombrePeliAgregar == "x":
+            break
+        else:
+            while nombrePeliAgregar == "" or (len(nombrePeliAgregar)) > 196:
+                system ("cls")
+                print('=====================')
+                print("Esa pelicula no existe, o ingreso un nombre vacio")
+                print('=====================')
+                nombrePeliAgregar = input("Ingrese el nombre de la pelicula a agregar(x para cancelar): ")
+                
+            # año de la peli nueva
+            anioPeliAgregar = input(f"Ingrese el año de estreno para {nombrePeliAgregar}: ")
+            while (len(anioPeliAgregar) != 4):
+                system("cls")
+                print("=====================")
+                print(f'{anioPeliAgregar} no es valido, debe tener 4 numeros. Ej: 2002')
+                print("=====================")
+                anioPeliAgregar = input(f"Ingrese el año de estreno para {nombrePeliAgregar}: ")
+            # genero de la peli nueva
+            generosData = rq.get('http://127.0.0.1:5000/generos')
+            generos = generosData.json()
+            for genero in generos:
+                print(f'Los generos disponibles son: {genero["generoNombre"]}')    
 
-    generoPeliAgregar = input("Que genero quiere?: ")
-    # director de la peli nueva
-    directoresData = rq.get("http://127.0.0.1:5000/directores")
-    directores = directoresData.json()
-    print("Los directores disponibles son: ")
-    for director in directores:
-        print(f'{director["director"]} con id: {director["idDirector"]}')
-    
-    directorPeliAgregar = input("Que director quiere? Escriba el id del director. Ej: 1. : ")
-    # sinopsis de la peli nueva
-    sinopsisPeliAgregar = input(f"Ingrese su sinopsis para {nombrePeliAgregar}: ")
-    while (sinopsisPeliAgregar == ""):
-        system ("cls")
-        print('=====================')
-        print("La sinopsis no puede estar vacía.")
-        print('=====================')
-        sinopsisPeliAgregar = input(f"Ingrese su sinopsis para {nombrePeliAgregar}: ")
-        
-    imagenPeliAgregar = input(f'Ingrese el URL de la imagen para {nombrePeliAgregar}: ')
-    # peli nueva
-    peliAgregar = {
-        "anio": anioPeliAgregar,
-        "comentariosID": [],
-        "directorID": directorPeliAgregar,
-        "generoPeli": generoPeliAgregar,
-        "nombre":nombrePeliAgregar,
-        "peliculaID": "",
-        "portada": imagenPeliAgregar,
-        "puntuacion": "",
-        "puntuaciones": {},
-        "sinopsis": sinopsisPeliAgregar,
-        "visualizaciones": 0
-    }
-    # paso a json
-    dataEnviar = json.dumps(peliAgregar)
-    # si no aclaras el tipo de contenido no te deja
-    encabezado = {'Content-type': 'application/json'}
-    # post
-    response = rq.post("http://127.0.0.1:5000/peliculas/agregar", data=dataEnviar, headers=encabezado)
-    
-    print(response.text)
-    input('Enter para continuar...')
-
+            generoPeliAgregar = input("Que genero quiere?: ")
+            # director de la peli nueva
+            directoresData = rq.get("http://127.0.0.1:5000/directores")
+            directores = directoresData.json()
+            print("Los directores disponibles son: ")
+            for director in directores:
+                print(f'{director["director"]} con id: {director["idDirector"]}')
+            
+            directorPeliAgregar = input("Que director quiere? Escriba el id del director. Ej: 1. : ")
+            # sinopsis de la peli nueva
+            sinopsisPeliAgregar = input(f"Ingrese su sinopsis para {nombrePeliAgregar}: ")
+            while (sinopsisPeliAgregar == ""):
+                system ("cls")
+                print('=====================')
+                print("La sinopsis no puede estar vacía.")
+                print('=====================')
+                sinopsisPeliAgregar = input(f"Ingrese su sinopsis para {nombrePeliAgregar}: ")
+                
+            imagenPeliAgregar = input(f'Ingrese el URL de la imagen para {nombrePeliAgregar}: ')
+            # peli nueva
+            peliAgregar = {
+                "anio": anioPeliAgregar,
+                "comentariosID": [],
+                "directorID": directorPeliAgregar,
+                "generoPeli": generoPeliAgregar,
+                "nombre":nombrePeliAgregar,
+                "peliculaID": "",
+                "portada": imagenPeliAgregar,
+                "puntuacion": "",
+                "puntuaciones": {},
+                "sinopsis": sinopsisPeliAgregar,
+                "visualizaciones": 0
+            }
+            # paso a json
+            dataEnviar = json.dumps(peliAgregar)
+            # si no aclaras el tipo de contenido no te deja
+            encabezado = {'Content-type': 'application/json'}
+            # post
+            response = rq.post("http://127.0.0.1:5000/peliculas/agregar", data=dataEnviar, headers=encabezado)
+            
+            print(response.text)
+            input('Enter para continuar...')
+    print("Usted a cancelado la accion.")
+    input("Enter para continuar...")
 # eliminar una peli 
 def peliEliminar(usuarioID):
     system("cls")
@@ -976,9 +981,40 @@ def agregarDirector():
             break
     
 def eliminarDirector():
-    return
+    system("cls")
+    print('=====================')
+    print('Eliminar un Director')
+    print('=====================')
+    directorData = rq.get("http://127.0.0.1:5000/directores")
+    directores = directorData.json()
+    print("Los directores disponibles son: ")
+    print()
+    for director in directores:
+        print(f'#{director["director"]} con id: {director["idDirector"]}')
+        print()
+    print()
+    
+    while True: 
+        exDirectorID = input('Ingrese el id del director que quiere eliminar(x para salir): ')
+        if exDirectorID != 'x':
+            datos = rq.delete(f'http://127.0.0.1:5000/director/eliminar/{exDirectorID}')
+            mensaje = datos.text
+            print("=====================")
+            print(mensaje)
+            print("=====================")
+        else:
+            system("cls")
+            print("===================================================")
+            print('Usted cancelo la eliminacion')
+            print("===================================================")
+            break
+
 def modificarDirector():
-    return
+    system("cls")
+    print('=====================')
+    print('Modificar un Director')
+    print('=====================')
+
 def menuGenero():
     opcionMenuGenero = 1
     return opcionMenuGenero

@@ -52,7 +52,7 @@ while opcionMenu1 != 3:
                 if opcionDirector == 1:
                     fun.agregarDirector()
                 elif opcionDirector == 2:
-                    print("Aca se elimina un director")
+                    fun.eliminarDirector()
                 elif opcionDirector == 3:
                     print("Aca se modifica un director")
             if opcion == 18:
