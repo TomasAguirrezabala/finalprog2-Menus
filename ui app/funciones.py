@@ -4,7 +4,6 @@ import json
 import random
 
 
-
 def menuInicial():
     opcion = 0
     while not(opcion>=1 and opcion<=3):
@@ -36,7 +35,10 @@ def inicio_de_sesion():
         input_id = input('ID: ')
         input_contrasena = input('Contraseña: ').lower()
         if input_id == '' or input_contrasena == '':
-                print ('Por favor, no deje ningun campo vacio.')
+                system("cls")
+                print("=====================================")
+                print('Por favor, no deje ningun campo vacio.')
+                print("=====================================")
                 input('Enter para continuar...')
                 system('cls')
                 continue
@@ -71,14 +73,14 @@ def menuUsuarioResgistrado():
         print("3) Mostrar peliculas de un director.")
         print("4) Mostrar las peliculas con portada.")
         print("5) ABM Peliculas.")
-        print("6) ABM Comentarios")
+        print("6) ABM Comentarios.")
         print("7) Buscar pelicula o director.")
         print("8) Puntuar pelicula.")
         print("9) ABM usuario.")   
         print("10) Pelicula aleatoria!")
-        print("11) Mostrar visualizaciones por pelicula")
-        print("12) ABM Directores")
-        print("13) ABM Generos")
+        print("11) Mostrar visualizaciones por pelicula.")
+        print("12) ABM Directores.")
+        print("13) ABM Generos.")
         print("14) Salir.")
         opcionmenu1=int(input("ingresar opcion: "))
     return opcionmenu1
@@ -115,6 +117,7 @@ volver al menu, ingresa "n": ').lower()
         if len(peliculas) > 5:
             paginado()
         else:
+            system("cls")
             for pelicula in peliculas:
                 print(f'{pelicula["nombre"]} con id: {pelicula["peliculaID"]}, genero: {pelicula["generoPeli"]}, del año: {pelicula["anio"]}\
         y su sinopsis es: {pelicula["sinopsis"]}')
@@ -156,6 +159,7 @@ def pelisDirector():
     try:
         peliculasDirectorData = rq.get(f"http://127.0.0.1:5000/peliculas/director/{directorID}")
         peliculasDirector = peliculasDirectorData.json()
+        system("cls")
         print()
         print("Las peliculas de este director son: ")
         print()
@@ -165,9 +169,10 @@ def pelisDirector():
             print()
         input('Enter para continuar...')
     except rq.exceptions.JSONDecodeError:
-        print()
+        system("cls")
+        print("=========================================================")
         print("Este director no existe o no tiene peliculas para mostrar")   
-        print()      
+        print("=========================================================")      
         input('Enter para continuar...')   
 
 # muestra las peli con portada
@@ -176,9 +181,7 @@ def peliPortada():
     peliPortadaData = rq.get("http://127.0.0.1:5000/peliculas/portada")
     peliPortada = peliPortadaData.json()
     print()
-    print("-----------------------------------")
     print("Las peliculas con portada son: ")
-    print("-----------------------------------")
     print()
     for peliConPortada in peliPortada:
         print(f'{peliConPortada["nombre"]} con id: {peliConPortada["peliculaID"]}, genero: {peliConPortada["generoPeli"]}, portada: {peliConPortada["portada"]}\
@@ -186,7 +189,7 @@ def peliPortada():
         print()
     input('Enter para continuar...')           
 
-# agregar una peli
+#ABM peliculas
 def peliAgregar():
     while True:
         system("cls")
@@ -297,13 +300,16 @@ def peliAgregar():
             # post
             response = rq.post("http://127.0.0.1:5000/peliculas/agregar", data=dataEnviar, headers=encabezado)
             system("cls")
+            print("========================")
             print(response.text)
-            print()
+            print("========================")
             input('Enter para continuar...')
+            break
+    system("cls")
     print()
     print("Usted a cancelado la accion.")
     input("Enter para continuar...")
-# eliminar una peli 
+
 def peliEliminar(usuarioID):
     system("cls")
     print('=====================')
@@ -318,43 +324,36 @@ def peliEliminar(usuarioID):
         print()
     
     while True: 
-        peliculaID = input('Ingrese el id de la peli que quiere borrar(x para salir): ')
+        peliculaID = input('Ingrese el id de la pelicula que quiere borrar(x para salir): ')
         if peliculaID != 'x':
             datos = rq.delete(f'http://127.0.0.1:5000/peliculas/{peliculaID}/usuarioID/{usuarioID}/eliminar')
             mensaje = datos.text
-            print("=====================")
+            system("cls")
+            print("=============================")
             print(mensaje)
-            print("=====================")
+            print("=============================")
+            input('Enter para continuar...')
+            break
         else:
             system("cls")
-            print("===================================================")
+            print("============================")
             print('Usted cancelo la eliminacion')
-            print("===================================================")
+            print("============================")
+            input('Enter para continuar...')
             break
 
 def modificar_pelicula():
     opcion_modificar = 0
     system("cls")
-    while not(opcion_modificar>=1 and opcion_modificar<=7):
-        system("cls") 
-        print('Modificar Pelicula')
-        print('1) Titulo')
-        print('2) Director')
-        print('3) Genero')
-        print('4) Año')
-        print('5) Portada')
-        print('6) Sinopsis')
-        print('7) Salir')
-        opcion_modificar = int(input('Ingresar opcion: '))
-
     pelisData = rq.get("http://127.0.0.1:5000/pelis")
     peliculas = pelisData.json()
+    system("cls")
     print("Las peliculas disponibles son: ")
     print()
     for pelicula in peliculas:
         print(f'#{pelicula["nombre"]} con id: {pelicula["peliculaID"]}')
         print()
-    modificar = int(input('Ingrese la ID de la pelicula que desea modificar: '))
+    modificar = input('Ingrese la ID de la pelicula que desea modificar: ')
     #peli vacia donde guarda cada cambio para poder hacer mas de 1 cambio antes de enviar los datos
     modificaciones_pelicula = {
         "anio": "",
@@ -375,7 +374,16 @@ def modificar_pelicula():
         if pelicula["peliculaID"] == modificar:
             system('cls')
             while opcion_modificar != 7:
-                opcion_modificar = modificar_pelicula()
+                system("cls")
+                print('Modificar Pelicula')
+                print('1) Titulo')
+                print('2) Director')
+                print('3) Genero')
+                print('4) Año')
+                print('5) Portada')
+                print('6) Sinopsis')
+                print('7) Salir')
+                opcion_modificar = int(input('Ingresar opcion: '))
                 if opcion_modificar == 1:
                     while True:
                         modif = input(f"El titulo a modificar es '{pelicula['nombre']}', Ingrese su nuevo valor: ")
@@ -465,10 +473,11 @@ def modificar_pelicula():
                     modificaciones_pelicula["peliculaID"] = modificar
                     datos = rq.put(f'http://127.0.0.1:5000/peliculas/modif/', json=modificaciones_pelicula)
                     mensaje = datos.text
-                    print("*")
+                    print("===============")
                     print(mensaje)
-                    print("*")
+                    print("===============")
                     input('Enter para continuar...')
+                    system("cls")
 
 def paginado():
     pelisData = rq.get("http://127.0.0.1:5000/pelis")
@@ -504,12 +513,11 @@ def promedio_puntuacion(id_Peli, peliculas):
                 if key == "puntuaciones":
                     for i, p in value.items():
                         puntos.append(p)
-            pelicula["puntuacion"] = sum(puntos)
+            pelicula["puntuacion"] = sum(puntos) / len(pelicula['puntuaciones'])
 
 def puntuar_peli(usuarioID):
     pelisData = rq.get("http://127.0.0.1:5000/pelis")
     peliculas = pelisData.json()
-    system("cls")
     system("cls")
     print("Las peliculas disponibles son: ")
     print()
@@ -530,12 +538,14 @@ def puntuar_peli(usuarioID):
                 pelicula["puntuaciones"][usuarioID] = puntuacion
                 promedio_puntuacion(id_peli, peliculas)
                 rq.put(f"http://127.0.0.1:5000/peliculas/actualizar", json=peliculas)
+                system("cls")
                 print("Película puntuada con éxito.")
             else:
+                system("cls")
                 print("La puntuación ingresada debe ser de 0 a 5.")
             input("Enter para continuar.")
             return
-
+    system("cls")
     print("Error al encontrar la película.")
     input("Enter para volver...")
 
@@ -553,6 +563,7 @@ def buscar_pelicula_o_director():
     opcion = input("Ingrese opción: ")
     
     if opcion == "1":
+        system("cls")
         buscar = input("Ingrese el título que busca: ")
         for pelicula in pelisData:
             if buscar.lower() in pelicula['nombre'].lower():
@@ -561,14 +572,17 @@ def buscar_pelicula_o_director():
                     rq.put(f"http://127.0.0.1:5000/peliculas/actualizar", json=pelisData)
                 peliculas_encontradas.append(pelicula)
         if peliculas_encontradas:
+            system("cls")
             print(f'Se encontraron {len(peliculas_encontradas)} películas:')
             for peli in peliculas_encontradas:
                 print(f'- {peli["nombre"]} (id: {peli["peliculaID"]}), género: {peli["generoPeli"]}, año: {peli["anio"]}, sinopsis: {peli["sinopsis"]}')
         else:
+            system("cls")
             print("No se encontraron películas.")
         input("Presione Enter para volver...")
             
     elif opcion == "2":
+        system("cls")
         buscar = input("Ingrese el director que busca: ")
         for director in directoresData:
             if buscar.lower() in director['director'].lower():
@@ -578,16 +592,15 @@ def buscar_pelicula_o_director():
             for director in directores_encontrados:
                 print(f'- {director["director"]} (id: {director["idDirector"]})')
         else:
+            system("cls")
             print("No se encontraron directores.")
         input("Presione Enter para volver...")
     else:
+        system("cls")
         print("Opción no válida")
         input("Presione Enter para continuar...")
 
-# empieza ABM comentarios
-# empieza ABM comentarios
-# empieza ABM comentarios
-
+#ABM comentarios
 # agregar comentario
 def agregarComentario(usuarioID):
     system("cls")
@@ -613,11 +626,13 @@ def agregarComentario(usuarioID):
             nuevoComentario={"comentarioID":"","usuarioID":usuarioID,"comentario":comentario}
             datos = rq.post(f'http://127.0.0.1:5000/pelicula/{idPeliAgregar}/comentarios/agregar', json=nuevoComentario)
             respuestaFlask = datos.text
+            system("cls")
             print("=====================")
             print(respuestaFlask)
             print("=====================")
     
     if encontrado == False:
+        system("cls")
         print("=====================")
         print('Error al crear el comentario')
         print("=====================")
@@ -656,6 +671,7 @@ def eliminarComentario(usuarioID):
                     # Si el comentario existe, enviar una solicitud para eliminarlo
                     datos = rq.delete(f"http://127.0.0.1:5000/comentarios/{comenBorrarID}/usuarioID/{usuarioID}/borrar")
                     mensaje = datos.text
+                    system("cls")
                     print("==================================")
                     print(mensaje)
                     print("==================================")
@@ -663,18 +679,21 @@ def eliminarComentario(usuarioID):
                     system("cls")
                     break
                 else:
+                    system("cls")
                     print("===================================================")
                     print('Error, ingresó un número que no es suyo o no existe')
                     print("===================================================")
                     input('Ingrese enter para continuar...')
                     system("cls")
             else:
+                system("cls")
                 print("===================================================")
                 print('Error, ingrese un número entero válido')
                 print("===================================================")
                 input('Ingrese enter para continuar...')
                 system("cls")
     else:
+        system("cls")
         print("=======================")
         print('No tiene comentarios.')
         print("=======================")
@@ -727,36 +746,35 @@ def modificarComentario(usuarioID):
                     comenEditado = {"comentarioID":comenEditarID,"usuarioID":usuarioID,"comentario":comenModificado}
                     datos = rq.put(f"http://127.0.0.1:5000/comentarios/modificar", json=comenEditado)
                     mensaje = datos.text
+                    system("cls")
                     print("==================================")
                     print(mensaje)
                     print("==================================")
                     input('Ingrese enter para continuar...')
                     break
                 else:
+                    system("cls")
                     print("===================================================")
                     print('Error, ingresó un número que no es suyo o no existe')
                     print("===================================================")
                     input('Ingrese enter para continuar...')
                     system("cls")
             else:
+                system("cls")
                 print("===================================================")
                 print('Error, ingrese un número entero válido')
                 print("===================================================")
                 input('Ingrese enter para continuar...')
                 system("cls")
     else:
+        system("cls")
         print("=======================")
         print('No tiene comentarios.')
         print("=======================")
         input('Ingrese enter para continuar...')
 # termina ABM comentarios
-# termina ABM comentarios
-# termina ABM comentarios
 
-# empieza abm usuario
-# empieza abm usuario
-# empieza abm usuario
-
+#ABM usuarios
 def agregarUsuario():
     system("cls")
     print("--------------------")
@@ -766,16 +784,22 @@ def agregarUsuario():
         nombreUsuarioNuevo = input("Ingresa el nombre del nuevo usuario: ")
         contraUsuarioNuevo = input("Ingresa la contraseña del nuevo usuario: ")
         if nombreUsuarioNuevo == "" or contraUsuarioNuevo == "":
+            system("cls")
+            print("=================================")
             print("No debes dejar ningun campo vacio")
+            print("=================================")
             input("Enter para continuar.")
+            system("cls")
         else: 
             nuevoUsuario = {f"usuario":nombreUsuarioNuevo,"contrasena":contraUsuarioNuevo,"usuarioID":"","admin":False}
             datos = rq.post('http://127.0.0.1:5000/usuarios/abm', json=nuevoUsuario)
             respuestaFlask = datos.text
+            system("cls")
             print("=====================")
             print(respuestaFlask)
             print("=====================")
             input("Enter para continuar.")
+            system("cls")
             break
 
 def eliminarUsuario(admin):
@@ -792,6 +816,7 @@ def eliminarUsuario(admin):
     if esAdmin == False:
         print("Solo los administradores pueden eliminar un usuario")
         input("Enter para continuar.")
+        system("cls")
         return
     else:
         usuariosData = rq.get('http://127.0.0.1:5000/usuarios')
@@ -822,21 +847,27 @@ def eliminarUsuario(admin):
                 encabezado = {"Content-Type":"application/json"}
                 datos = rq.delete(f"http://127.0.0.1:5000/usuarios/{usuarioBorrarID}/eliminar", headers=encabezado)
                 mensaje = datos.text
+                system("cls")
                 print("==================================")
                 print(mensaje)
                 print("==================================")
                 input('Ingrese enter para continuar...')
+                system("cls")
                 break
             else:
+                system("cls")
                 print("===================================================")
                 print('Error, ingresó un número que no existe')
                 print("===================================================")
                 input('Ingrese enter para continuar...')
+                system("cls")
         else:
+            system("cls")
             print("===================================================")
             print('Error, ingrese un número entero válido')
             print("===================================================")
             input('Ingrese enter para continuar...')
+            system("cls")
 
 def modificarUsuario(usuarioID):
     system("cls")
@@ -857,15 +888,24 @@ def modificarUsuario(usuarioID):
         #pedir id
         idUsuarioModificar = input("Ingresa el id del usuario que deseas modificar(0 para salir): ")
         if idUsuarioModificar == "":
+            system("cls")
+            print("=================================")
             print("No debes dejar ningun campo vacio")
+            print("=================================")
             input("Enter para continuar.")
+            system("cls")
         elif idUsuarioModificar == "0":
+            system("cls")
+            print("========================")
             print("Usted cancelo la accion.")
+            print("========================")
             input("Enter para continuar...")
+            system("cls")
             break
         elif usuarioID != idUsuarioModificar:
             print("No se puede modificar a otros usuarios, solo a vos mismo")
             input("Enter para continuar... ")
+            system("cls")
         else:
             system("cls")
             usuarioNuevo = input("Ingresa el nuevo nombre para el director: ")
@@ -873,10 +913,12 @@ def modificarUsuario(usuarioID):
             usuarioModificado = {"usuario": usuarioNuevo, "contrasena" : contrasenaNueva, "usuarioID":idUsuarioModificar, "admin":""}
             datos = rq.put('http://127.0.0.1:5000/usuarios/modificar', json=usuarioModificado)
             respuestaFlask = datos.text
+            system("cls")
             print("=====================")
             print(respuestaFlask)
             print("=====================")
             input("Enter para continuar.")
+            system("cls")
             break
     
 def darAdmin(admin):
@@ -893,8 +935,12 @@ def darAdmin(admin):
         esAdmin=False
         
     if esAdmin == False:
+        system("cls")
+        print("===================================================")
         print("Solo los administradores pueden hacer admin a un usuario")
+        print("===================================================")
         input("Enter para continuar.")
+        system("cls")
         return
     else:
         print("Lista de usuarios: ")
@@ -926,21 +972,27 @@ def darAdmin(admin):
                 encabezado = {"Content-Type":"application/json"}
                 datos = rq.put(f"http://127.0.0.1:5000/usuarios/admin/{nuevoAdminID}", headers=encabezado)
                 mensaje = datos.text
+                system("cls")
                 print("==================================")
                 print(mensaje)
                 print("==================================")
                 input('Ingrese enter para continuar...')
+                system("cls")
                 break
             else:
+                system("cls")
                 print("===================================================")
                 print('Error, ingresó un número que no existe')
                 print("===================================================")
                 input('Ingrese enter para continuar...')
+                system("cls")
         else:
+            system("cls")
             print("===================================================")
             print('Error, ingrese un número entero válido')
             print("===================================================")
             input('Ingrese enter para continuar...')
+            system("cls")
 
 def sacarAdmin(admin):
     system("cls")
@@ -956,8 +1008,12 @@ def sacarAdmin(admin):
         esAdmin=False
         
     if esAdmin == False:
+        system("cls")
+        print("===================================================")
         print("Solo los administradores pueden quitar el admin a un usuario")
+        print("===================================================")
         input("Enter para continuar.")
+        system("cls")
         return
     else:
         print("Lista de usuarios: ")
@@ -989,25 +1045,27 @@ def sacarAdmin(admin):
                 encabezado = {"Content-Type":"application/json"}
                 datos = rq.put(f"http://127.0.0.1:5000/usuarios/admin/eliminar/{exAdminID}", headers=encabezado)
                 mensaje = datos.text
+                system("cls")
                 print("==================================")
                 print(mensaje)
                 print("==================================")
                 input('Ingrese enter para continuar...')
+                system("cls")
                 break
             else:
+                system("cls")
                 print("===================================================")
                 print('Error, ingresó un número que no existe')
                 print("===================================================")
                 input('Ingrese enter para continuar...')
+                system("cls")
         else:
+            system("cls")
             print("===================================================")
             print('Error, ingrese un número entero válido')
             print("===================================================")
             input('Ingrese enter para continuar...')
-
-# termina abm usuario
-# termina abm usuario
-# termina abm usuario
+            system("cls")
 
 def peliculaAleatoria():
     system("cls")
@@ -1018,6 +1076,7 @@ def peliculaAleatoria():
     print(f'{peliAleatoria["nombre"]} con id: {peliAleatoria["peliculaID"]}, genero: {peliAleatoria["generoPeli"]}, del año: {peliAleatoria["anio"]}\
 y su sinopsis es: {peliAleatoria["sinopsis"]}')
     input("Enter para continuar...")
+    system("cls")
 
 def mostrarVisualizaciones():
     system("cls")
@@ -1031,11 +1090,9 @@ def mostrarVisualizaciones():
         print("ID: "f"{pelicula['peliculaID']}")
         print("Visualizaciones: "f"{pelicula['visualizaciones']}")
         print()
-    input("Enter para continuar...")    
-    
-#abm generos y directores
-#abm generos y directores
-#abm generos y directores
+    input("Enter para continuar...") 
+    system("cls")   
+#ABM directores
 def menuDirector():
     system("cls")
     opcionMenuDirector = 0
@@ -1049,6 +1106,7 @@ def menuDirector():
         print("4) Salir")
         opcionMenuDirector=int(input("ingresar opcion: "))
         return opcionMenuDirector
+    system("cls")
 
 def agregarDirector():
     system("cls")
@@ -1058,22 +1116,32 @@ def agregarDirector():
     while True:
         directorNuevo = input("Ingresa el nombre del nuevo director(0 para salir): ")
         if directorNuevo == "":
+            system("cls")
+            print("=================================")
             print("No debes dejar ningun campo vacio")
+            print("=================================")
             input("Enter para continuar.")
+            system("cls")
         elif directorNuevo == 0:
+            system("cls")
+            print("========================")
             print("Usted cancelo la accion.")
+            print("========================")
             input("Enter para continuar...")
+            system("cls")
             break
         else: 
             nuevoDirector = {f"director":directorNuevo,"idDirector": "idvacio"}
             datos = rq.post('http://127.0.0.1:5000/director/crear', json=nuevoDirector)
             respuestaFlask = datos.text
+            system("cls")
             print("=====================")
             print(respuestaFlask)
             print("=====================")
             input("Enter para continuar.")
+            system("cls")
             break
-    
+
 def eliminarDirector():
     system("cls")
     print('=====================')
@@ -1093,16 +1161,20 @@ def eliminarDirector():
         if exDirectorID != 'x':
             datos = rq.delete(f'http://127.0.0.1:5000/director/eliminar/{exDirectorID}')
             mensaje = datos.text
+            system("cls")
             print("=====================")
             print(mensaje)
             print("=====================")
+            input("Enter para continuar.")
         else:
             system("cls")
-            print("===================================================")
-            print('Usted cancelo la eliminacion')
-            print("===================================================")
+            print("=============================")
+            print('saliendo de eliminar director')
+            print("=============================")
+            input("Enter para continuar.")
+            system("cls")
             break
-            
+
 def modificarDirector():
     system("cls")
     print("-------------------")
@@ -1121,11 +1193,19 @@ def modificarDirector():
         #pedir id
         idDirectorModificar = input("Ingresa el id del director que deseas modificar(0 para salir): ")
         if idDirectorModificar == "":
+            system("cls")
+            print("=================================")
             print("No debes dejar ningun campo vacio")
+            print("=================================")
             input("Enter para continuar.")
+            system("cls")
         elif idDirectorModificar == "0":
+            system("cls")
+            print("=========================")
             print("Usted cancelo la accion.")
+            print("=========================")
             input("Enter para continuar...")
+            system("cls")
             break
         else:
             system("cls")
@@ -1133,16 +1213,14 @@ def modificarDirector():
             directorModificado = {"director": directorNuevo, "idDirector" : idDirectorModificar}
             datos = rq.put('http://127.0.0.1:5000/director/modificar', json=directorModificado)
             respuestaFlask = datos.text
+            system("cls")
             print("=====================")
             print(respuestaFlask)
             print("=====================")
             input("Enter para continuar.")
+            system("cls")
             break
-
-#abm generos
-#abm generos
-#abm generos
-
+#ABM generos
 def menuGenero():
     system("cls")
     opcionMenuGenero = 0
@@ -1165,20 +1243,30 @@ def agregarGenero():
     while True:
         generoNuevo = input("Ingresa el nombre del nuevo genero(0 para salir): ")
         if generoNuevo == "":
+            system("cls")
+            print("=================================")
             print("No debes dejar ningun campo vacio")
+            print("=================================")
             input("Enter para continuar.")
+            system("cls")
         elif generoNuevo == 0:
-            print("Usted cancelo la accion.")
+            system("cls")
+            print("============================")
+            print("saliendo de eliminar genero.")
+            print("===========================")
             input("Enter para continuar...")
+            system("cls")
             break
         else: 
             nuevoGenero = {"generoNombre":generoNuevo,"idgenero": ""}
             datos = rq.post('http://127.0.0.1:5000/genero/crear', json=nuevoGenero)
             respuestaFlask = datos.text
+            system("cls")
             print("=====================")
             print(respuestaFlask)
             print("=====================")
             input("Enter para continuar.")
+            system("cls")
             break
 
 def eliminarGenero():
@@ -1195,19 +1283,29 @@ def eliminarGenero():
             print(f'nombre: {genero["generoNombre"]}'f'e ID: {genero["idgenero"]}')
         generoEliminar = input("Ingresa el id del genero que deseas eliminar(0 para salir): ")
         if generoEliminar == "":
+            system("cls")
+            print("=================================")
             print("No debes dejar ningun campo vacio")
+            print("=================================")
             input("Enter para continuar.")
+            system("cls")
         elif generoEliminar == "0":
+            system("cls")
+            print("========================")
             print("Usted cancelo la accion.")
+            print("========================")
             input("Enter para continuar...")
+            system("cls")
             break
         else:
             datos = rq.delete(f'http://127.0.0.1:5000/genero/eliminar/{generoEliminar}')
             respuestaFlask = datos.text
+            system("cls")
             print("=====================")
             print(respuestaFlask)
             print("=====================")
             input("Enter para continuar.")
+            system("cls")
             break
 
 def modificarGenero():
@@ -1225,11 +1323,19 @@ def modificarGenero():
         print()
         generoModificar = input("Ingresa el id del genero que deseas modificar(0 para salir): ")
         if generoModificar == "":
+            system("cls")
+            print("=================================")
             print("No debes dejar ningun campo vacio")
+            print("=================================")
             input("Enter para continuar.")
+            system("cls")
         elif generoModificar == "0":
+            system("cls")
+            print("=======================")
             print("Usted cancelo la accion.")
+            print("=======================")
             input("Enter para continuar...")
+            system("cls")
             break
         else:
             print()
@@ -1237,10 +1343,12 @@ def modificarGenero():
             generoModificado = {"generoNombre": generoNuevo, "idgenero" :generoModificar}
             datos = rq.put(f'http://127.0.0.1:5000/genero/modificar', json=generoModificado)
             respuestaFlask = datos.text
+            system("cls")
             print("=====================")
             print(respuestaFlask)
             print("=====================")
             input("Enter para continuar.")
+            system("cls")
             break
 
 #menus extras
