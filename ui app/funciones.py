@@ -306,8 +306,6 @@ def peliAgregar():
             input('Enter para continuar...')
             break
     system("cls")
-    print()
-    print("Usted a cancelado la accion.")
     input("Enter para continuar...")
 
 def peliEliminar(usuarioID):
