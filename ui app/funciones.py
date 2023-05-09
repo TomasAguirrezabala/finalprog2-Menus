@@ -976,24 +976,141 @@ def agregarDirector():
             break
     
 def eliminarDirector():
-    return
+    system("cls")
+    print('=====================')
+    print('Eliminar un Director')
+    print('=====================')
+    directorData = rq.get("http://127.0.0.1:5000/directores")
+    directores = directorData.json()
+    print("Los directores disponibles son: ")
+    print()
+    for director in directores:
+        print(f'#{director["director"]} con id: {director["idDirector"]}')
+        print()
+    print()
+
+    while True: 
+        exDirectorID = input('Ingrese el id del director que quiere eliminar(x para salir): ')
+        if exDirectorID != 'x':
+            datos = rq.delete(f'http://127.0.0.1:5000/director/eliminar/exDirectorID')
+            mensaje = datos.text
+            print("=====================")
+            print(mensaje)
+            print("=====================")
+        else:
+            system("cls")
+            print("===================================================")
+            print('Usted cancelo la eliminacion')
+            print("===================================================")
+            break
+            
 def modificarDirector():
-    return
+    system("cls")
+    print("-------------------")
+    print("Modificar un Director")
+    print("-------------------")
+    while True:
+        directorModificar = input("Ingresa el nombre del director que deseas modificar(0 para salir): ")
+        if directorModificar == "":
+            print("No debes dejar ningun campo vacio")
+            input("Enter para continuar.")
+        elif directorModificar == "0":
+            print("Usted cancelo la accion.")
+            input("Enter para continuar...")
+            break
+        else:
+            directorNuevo = input("Ingresa el nuevo nombre para el director: ")
+            directorModificado = {"directorNombre": directorNuevo, "iddirector" : "idvacio"}
+            datos = rq.put(f'http://127.0.0.1:5000/director/modificar/{directorModificar}', json=directorModificado)
+            respuestaFlask = datos.text
+            print("=====================")
+            print(respuestaFlask)
+            print("=====================")
+            input("Enter para continuar.")
+            break
+
+
 def menuGenero():
-    opcionMenuGenero = 1
-    return opcionMenuGenero
+    system("cls")
+    opcionMenuGenero = 0
+    while not(opcionMenuGenero>=1 and opcionMenuGenero<=3):
+        print("----------------")
+        print("Menu ABM Generos")
+        print("----------------")
+        print("1) Agregar un Genero")
+        print("2) Eliminar un Genero")
+        print("3) Modificar un Genero")
+        opcionMenuGenero=int(input("ingresar opcion: "))
+        return opcionMenuGenero
+
 def agregarGenero():
-    return
+    system("cls")
+    print("-------------------")
+    print("Registrar un Genero")
+    print("-------------------")
+    while True:
+        generoNuevo = input("Ingresa el nombre del nuevo genero(0 para salir): ")
+        if generoNuevo == "":
+            print("No debes dejar ningun campo vacio")
+            input("Enter para continuar.")
+        elif generoNuevo == 0:
+            print("Usted cancelo la accion.")
+            input("Enter para continuar...")
+            break
+        else: 
+            nuevoGenero = {f"generoNombre":generoNuevo,"idgenero": "idvacio"}
+            datos = rq.post('http://127.0.0.1:5000/genero/crear', json=nuevoGenero)
+            respuestaFlask = datos.text
+            print("=====================")
+            print(respuestaFlask)
+            print("=====================")
+            input("Enter para continuar.")
+            break
+
 def eliminarGenero():
-    return
+    system("cls")
+    print("-------------------")
+    print("Eliminar un Genero")
+    print("-------------------")
+    while True:
+        generoEliminar = input("Ingresa el nombre del genero que deseas eliminar(0 para salir): ")
+        if generoEliminar == "":
+            print("No debes dejar ningun campo vacio")
+            input("Enter para continuar.")
+        elif generoEliminar == "0":
+            print("Usted cancelo la accion.")
+            input("Enter para continuar...")
+            break
+        else:
+            datos = rq.delete(f'http://127.0.0.1:5000/genero/eliminar/{generoEliminar}')
+            respuestaFlask = datos.text
+            print("=====================")
+            print(respuestaFlask)
+            print("=====================")
+            input("Enter para continuar.")
+            break
+
 def modificarGenero():
-    return
-#abm generos y directores   
-#abm generos y directores
-#abm generos y directores
-    
-
-
-
-
-# Implementar ABM de directores y Géneros.
+    system("cls")
+    print("-------------------")
+    print("Modificar un Genero")
+    print("-------------------")
+    while True:
+        generoModificar = input("Ingresa el nombre del genero que deseas modificar(0 para salir): ")
+        if generoModificar == "":
+            print("No debes dejar ningun campo vacio")
+            input("Enter para continuar.")
+        elif generoModificar == "0":
+            print("Usted cancelo la accion.")
+            input("Enter para continuar...")
+            break
+        else:
+            generoNuevo = input("Ingresa el nuevo nombre para el genero: ")
+            generoModificado = {"generoNombre": generoNuevo, "idgenero" : "idvacio"}
+            datos = rq.put(f'http://127.0.0.1:5000/genero/modificar/{generoModificar}', json=generoModificado)
+            respuestaFlask = datos.text
+            print("=====================")
+            print(respuestaFlask)
+            print("=====================")
+            input("Enter para continuar.")
+            break
