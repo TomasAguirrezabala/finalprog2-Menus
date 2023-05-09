@@ -70,21 +70,16 @@ def menuUsuarioResgistrado():
         print("2) Mostrar las ultimas diez peliculas agregadas.")
         print("3) Mostrar peliculas de un director.")
         print("4) Mostrar las peliculas con portada.")
-        print("5) Agregar una pelicula.")
-        print("6) Eliminar una pelicula.")
-        print("7) Modificar una pelicula.")
-        print("8) ABM Comentarios")
-        print("9) Buscar pelicula o director.")
-        print("10) Puntuar pelicula.")
-        print("11) Agregar usuario.")   
-        print("12) Eliminar usuario.") 
-        print("13) Dar admin")
-        print("14) Sacar admin")
-        print("15) Pelicula aleatoria!")
-        print("16) Mostrar visualizaciones por pelicula")
-        print("17) ABM Directores")
-        print("18) ABM Generos")
-        print("19) Salir.")
+        print("5) ABM Peliculas.")
+        print("6) ABM Comentarios")
+        print("7) Buscar pelicula o director.")
+        print("8) Puntuar pelicula.")
+        print("9) ABM usuario.")   
+        print("10) Pelicula aleatoria!")
+        print("11) Mostrar visualizaciones por pelicula")
+        print("12) ABM Directores")
+        print("13) ABM Generos")
+        print("14) Salir.")
         opcionmenu1=int(input("ingresar opcion: "))
     return opcionmenu1
 
@@ -109,11 +104,10 @@ def mostrarPelis():
     system("cls")
     print("Las peliculas disponibles son: ")
     print()
-
     for pelicula in peliculas:
         print(f"{pelicula['nombre']}")
-        print()
-
+        
+        
     enteras = input('Si quieres conocer todos los detalles de las peliculas, ingresa "y", si quieres \
 volver al menu, ingresa "n": ').lower()
 
@@ -125,8 +119,8 @@ volver al menu, ingresa "n": ').lower()
                 print(f'{pelicula["nombre"]} con id: {pelicula["peliculaID"]}, genero: {pelicula["generoPeli"]}, del año: {pelicula["anio"]}\
         y su sinopsis es: {pelicula["sinopsis"]}')
                 print()
-
-            input("Enter para continuar.")
+            print()
+            input("Enter para continuar...")
     elif enteras == "n":
         return
     else:
@@ -145,11 +139,19 @@ def ultimas10Pelis():
         print()
         if i == 9:
             break
-    input("Enter para continuar.")    
+    input("Enter para continuar...")    
 
 # muestra las peliculas por un director
 def pelisDirector():
     system("cls")
+    #mostrar los directores disponibles
+    directorData = rq.get("http://127.0.0.1:5000/directores")
+    directores = directorData.json()
+    print("Los directores disponibles son: ")
+    print()
+    for director in directores:
+        print(f'#{director["director"]} con id: {director["idDirector"]}')
+        print()
     directorID = input("Ingrese la id del director: ")
     try:
         peliculasDirectorData = rq.get(f"http://127.0.0.1:5000/peliculas/director/{directorID}")
@@ -164,7 +166,8 @@ def pelisDirector():
         input('Enter para continuar...')
     except rq.exceptions.JSONDecodeError:
         print()
-        print("Este director no existe o no tiene peliculas para mostrar")         
+        print("Este director no existe o no tiene peliculas para mostrar")   
+        print()      
         input('Enter para continuar...')   
 
 # muestra las peli con portada
@@ -185,9 +188,13 @@ def peliPortada():
 
 # agregar una peli
 def peliAgregar():
-    # nombre de la peli nueva
-    nombrePeliAgregar = input("Ingrese el nombre de la pelicula a agregar: ")
     while True:
+        system("cls")
+        print("-----------------------------------")
+        print("Agregar una pelicula! ")
+        print("-----------------------------------")
+        print()
+        nombrePeliAgregar = input("Ingrese el nombre de la pelicula a agregar(x para cancelar): ")
         if nombrePeliAgregar == "x":
             break
         else:
@@ -199,6 +206,11 @@ def peliAgregar():
                 nombrePeliAgregar = input("Ingrese el nombre de la pelicula a agregar(x para cancelar): ")
                 
             # año de la peli nueva
+            system("cls")
+            print("-----------------------------------")
+            print("Agregar una pelicula! ")
+            print("-----------------------------------")
+            print()
             anioPeliAgregar = input(f"Ingrese el año de estreno para {nombrePeliAgregar}: ")
             while (len(anioPeliAgregar) != 4):
                 system("cls")
@@ -206,30 +218,63 @@ def peliAgregar():
                 print(f'{anioPeliAgregar} no es valido, debe tener 4 numeros. Ej: 2002')
                 print("=====================")
                 anioPeliAgregar = input(f"Ingrese el año de estreno para {nombrePeliAgregar}: ")
+            while True:
+                if anioPeliAgregar.isdigit():
+                    break
+                else:
+                    print("===================================================")
+                    print('Error, ingrese un número entero válido')
+                    print("===================================================")
+                    input('Ingrese enter para continuar...')
+                    system("cls")
+                    anioPeliAgregar = input(f"Ingrese el año de estreno para {nombrePeliAgregar}: ")
+            
+            
             # genero de la peli nueva
+            system("cls")
+            print("-----------------------------------")
+            print("Agregar una pelicula! ")
+            print("-----------------------------------")
+            print()
             generosData = rq.get('http://127.0.0.1:5000/generos')
             generos = generosData.json()
+            print('Los generos disponibles son:' )
+            print()
             for genero in generos:
-                print(f'Los generos disponibles son: {genero["generoNombre"]}')    
-
+                print(f'{genero["generoNombre"]}')
+            print()
             generoPeliAgregar = input("Que genero quiere?: ")
             # director de la peli nueva
+            system("cls")
+            print("-----------------------------------")
+            print("Agregar una pelicula! ")
+            print("-----------------------------------")
+            print()
             directoresData = rq.get("http://127.0.0.1:5000/directores")
             directores = directoresData.json()
             print("Los directores disponibles son: ")
             for director in directores:
                 print(f'{director["director"]} con id: {director["idDirector"]}')
-            
-            directorPeliAgregar = input("Que director quiere? Escriba el id del director. Ej: 1. : ")
+            print()
+            directorPeliAgregar = input("Que director quiere? Escriba el id del director: ")
             # sinopsis de la peli nueva
+            system("cls")
+            print("-----------------------------------")
+            print("Agregar una pelicula! ")
+            print("-----------------------------------")
+            print()
             sinopsisPeliAgregar = input(f"Ingrese su sinopsis para {nombrePeliAgregar}: ")
             while (sinopsisPeliAgregar == ""):
-                system ("cls")
+                system("cls")
                 print('=====================')
                 print("La sinopsis no puede estar vacía.")
                 print('=====================')
                 sinopsisPeliAgregar = input(f"Ingrese su sinopsis para {nombrePeliAgregar}: ")
-                
+            system("cls")
+            print("-----------------------------------")
+            print("Agregar una pelicula! ")
+            print("-----------------------------------")
+            print()   
             imagenPeliAgregar = input(f'Ingrese el URL de la imagen para {nombrePeliAgregar}: ')
             # peli nueva
             peliAgregar = {
@@ -251,9 +296,11 @@ def peliAgregar():
             encabezado = {'Content-type': 'application/json'}
             # post
             response = rq.post("http://127.0.0.1:5000/peliculas/agregar", data=dataEnviar, headers=encabezado)
-            
+            system("cls")
             print(response.text)
+            print()
             input('Enter para continuar...')
+    print()
     print("Usted a cancelado la accion.")
     input("Enter para continuar...")
 # eliminar una peli 
@@ -267,9 +314,8 @@ def peliEliminar(usuarioID):
     print("Las peliculas disponibles son: ")
     print()
     for pelicula in peliculas:
-        print(f'#{pelicula["nombre"]} con id: {pelicula["peliculaID"]}')
+        print("nombre: "f'{pelicula["nombre"]} con id: {pelicula["peliculaID"]}')
         print()
-    print()
     
     while True: 
         peliculaID = input('Ingrese el id de la peli que quiere borrar(x para salir): ')
@@ -286,11 +332,11 @@ def peliEliminar(usuarioID):
             print("===================================================")
             break
 
-
 def modificar_pelicula():
     opcion_modificar = 0
     system("cls")
-    while not(opcion_modificar>=1 and opcion_modificar<=7): 
+    while not(opcion_modificar>=1 and opcion_modificar<=7):
+        system("cls") 
         print('Modificar Pelicula')
         print('1) Titulo')
         print('2) Director')
@@ -298,7 +344,7 @@ def modificar_pelicula():
         print('4) Año')
         print('5) Portada')
         print('6) Sinopsis')
-        print('7) Terminar/Salir')
+        print('7) Salir')
         opcion_modificar = int(input('Ingresar opcion: '))
 
     pelisData = rq.get("http://127.0.0.1:5000/pelis")
@@ -424,7 +470,6 @@ def modificar_pelicula():
                     print("*")
                     input('Enter para continuar...')
 
-
 def paginado():
     pelisData = rq.get("http://127.0.0.1:5000/pelis")
     peliculas = pelisData.json()
@@ -441,7 +486,7 @@ def paginado():
             print(f'{pelicula["nombre"]} con id: {pelicula["peliculaID"]}, genero: {pelicula["generoPeli"]}, del año: {pelicula["anio"]}, y su sinopsis es: {pelicula["sinopsis"]}\n')
         opcion = ""
         while opcion not in ["x", "-", "+"]:
-            opcion = input(' "-" para pagina anterior y "+" para siguiente pagina.("x" para salir)')
+            opcion = input(' "-" para pagina anterior y "+" para siguiente pagina.("x" para salir): ')
         if opcion == "+":
             if pagina_actual < num_paginas - 1:
                 pagina_actual += 1
@@ -450,7 +495,6 @@ def paginado():
                 pagina_actual -= 1
         else:
             return
-
 
 def promedio_puntuacion(id_Peli, peliculas):
     puntos = []
@@ -461,7 +505,6 @@ def promedio_puntuacion(id_Peli, peliculas):
                     for i, p in value.items():
                         puntos.append(p)
             pelicula["puntuacion"] = sum(puntos)
-
 
 def puntuar_peli(usuarioID):
     pelisData = rq.get("http://127.0.0.1:5000/pelis")
@@ -495,7 +538,6 @@ def puntuar_peli(usuarioID):
 
     print("Error al encontrar la película.")
     input("Enter para volver...")
-
 
 def buscar_pelicula_o_director():
     pelisData = rq.get("http://127.0.0.1:5000/pelis").json()
@@ -541,7 +583,6 @@ def buscar_pelicula_o_director():
     else:
         print("Opción no válida")
         input("Presione Enter para continuar...")
-
 
 # empieza ABM comentarios
 # empieza ABM comentarios
@@ -591,16 +632,17 @@ def eliminarComentario(usuarioID):
     
     # Mostrar los comentarios del usuario
     if len(comentariosUsuario) != 0:
-        print('Sus comentarios son:')
-        for comentario in comentariosUsuario:
-            print(f"ID: {comentario['comentarioID']}, Comentario: {comentario['comentario']}")
-        
         # Pedir al usuario que ingrese el ID del comentario que desea eliminar
         while True:
             print()
+            system("cls")
+            print('Sus comentarios son:')
+            for comentario in comentariosUsuario:
+                print(f"ID: {comentario['comentarioID']}, Comentario: {comentario['comentario']}")
             comenBorrarID = input("Ingrese el ID del comentario que desea eliminar (0 para salir): ")
             if comenBorrarID == '0':
                 # Si el usuario ingresa 0, salir de la función
+                system("cls")
                 return "Usted cancelo la eliminacion"
             elif comenBorrarID.isdigit():
                 # Si el usuario ingresa un número entero válido, verificar si existe en la lista de comentarios del usuario
@@ -618,22 +660,26 @@ def eliminarComentario(usuarioID):
                     print(mensaje)
                     print("==================================")
                     input('Ingrese enter para continuar...')
+                    system("cls")
                     break
                 else:
                     print("===================================================")
                     print('Error, ingresó un número que no es suyo o no existe')
                     print("===================================================")
                     input('Ingrese enter para continuar...')
+                    system("cls")
             else:
                 print("===================================================")
                 print('Error, ingrese un número entero válido')
                 print("===================================================")
                 input('Ingrese enter para continuar...')
+                system("cls")
     else:
         print("=======================")
         print('No tiene comentarios.')
         print("=======================")
         input('Ingrese enter para continuar...')
+        system("cls")
 
 # modificar comentario
 def modificarComentario(usuarioID):
@@ -643,18 +689,22 @@ def modificarComentario(usuarioID):
     
     # Mostrar los comentarios del usuario
     if len(comentariosUsuario) != 0:
-        print('Sus comentarios son:')
-        for comentario in comentariosUsuario:
-            print(f"ID: {comentario['comentarioID']}, Comentario: {comentario['comentario']}")
-
         # Pedir al usuario que ingrese el ID del comentario que desea modificar
         while True:
+            system("cls")
+            print("-------------")
+            print("Modificar comentarios")
+            print("-------------")
+            print('Sus comentarios son:')
+            print()
+            for comentario in comentariosUsuario:
+                print(f"ID: {comentario['comentarioID']}, Comentario: {comentario['comentario']}")
             print()
             comenEditarID = input("Ingrese el ID del comentario que desea modificar (0 para salir): ")
             if comenEditarID == '0':
                 # Si el usuario ingresa 0, salir de la función
                 print("Usted cancelo la edicion")
-                
+                break
             elif comenEditarID.isdigit():
                 # Si el usuario ingresa un número entero válido, verificar si existe en la lista de comentarios del usuario
                 comentarioEncontrado = False
@@ -662,7 +712,9 @@ def modificarComentario(usuarioID):
                     if comentario['comentarioID'] == comenEditarID:
                         #pedimos el texto nuevo
                         while True:
+                            system("cls")
                             comenModificado = input("Ingrese el comentario nuevo: ")
+                            system("cls")
                             if comenModificado == "":
                                 print("No puede dejar el comentario vacio.")
                                 continue
@@ -685,11 +737,13 @@ def modificarComentario(usuarioID):
                     print('Error, ingresó un número que no es suyo o no existe')
                     print("===================================================")
                     input('Ingrese enter para continuar...')
+                    system("cls")
             else:
                 print("===================================================")
                 print('Error, ingrese un número entero válido')
                 print("===================================================")
                 input('Ingrese enter para continuar...')
+                system("cls")
     else:
         print("=======================")
         print('No tiene comentarios.')
@@ -784,6 +838,47 @@ def eliminarUsuario(admin):
             print("===================================================")
             input('Ingrese enter para continuar...')
 
+def modificarUsuario(usuarioID):
+    system("cls")
+    print("-------------------")
+    print("Modificar un Usuario")
+    print("-------------------")
+    
+    while True:
+        #mostrar los directores disponibles
+        usuariosData = rq.get("http://127.0.0.1:5000/usuarios")
+        usuarios = usuariosData.json()
+        print("Los usuarios disponibles son: ")
+        print()
+        for usuario in usuarios:
+            print(f'{usuario["usuario"]} con id: {usuario["usuarioID"]}')
+            print()
+            
+        #pedir id
+        idUsuarioModificar = input("Ingresa el id del usuario que deseas modificar(0 para salir): ")
+        if idUsuarioModificar == "":
+            print("No debes dejar ningun campo vacio")
+            input("Enter para continuar.")
+        elif idUsuarioModificar == "0":
+            print("Usted cancelo la accion.")
+            input("Enter para continuar...")
+            break
+        elif usuarioID != idUsuarioModificar:
+            print("No se puede modificar a otros usuarios, solo a vos mismo")
+            input("Enter para continuar... ")
+        else:
+            system("cls")
+            usuarioNuevo = input("Ingresa el nuevo nombre para el director: ")
+            contrasenaNueva = input("Ingresa la nueva contraseña: ")
+            usuarioModificado = {"usuario": usuarioNuevo, "contrasena" : contrasenaNueva, "usuarioID":idUsuarioModificar, "admin":""}
+            datos = rq.put('http://127.0.0.1:5000/usuarios/modificar', json=usuarioModificado)
+            respuestaFlask = datos.text
+            print("=====================")
+            print(respuestaFlask)
+            print("=====================")
+            input("Enter para continuar.")
+            break
+    
 def darAdmin(admin):
     system("cls")
     print("--------------------")
@@ -924,7 +1019,6 @@ def peliculaAleatoria():
 y su sinopsis es: {peliAleatoria["sinopsis"]}')
     input("Enter para continuar...")
 
-
 def mostrarVisualizaciones():
     system("cls")
     print("--------------------")
@@ -945,16 +1039,16 @@ def mostrarVisualizaciones():
 def menuDirector():
     system("cls")
     opcionMenuDirector = 0
-    while not(opcionMenuDirector>=1 and opcionMenuDirector<=3):
+    while not(opcionMenuDirector>=1 and opcionMenuDirector<=4):
         print("--------------------")
         print("Menu ABM Directores")
         print("--------------------")
         print("1) Agregar un Director")
         print("2) Eliminar un Director")
         print("3) Modificar un director")
+        print("4) Salir")
         opcionMenuDirector=int(input("ingresar opcion: "))
         return opcionMenuDirector
-
 
 def agregarDirector():
     system("cls")
@@ -997,7 +1091,7 @@ def eliminarDirector():
     while True: 
         exDirectorID = input('Ingrese el id del director que quiere eliminar(x para salir): ')
         if exDirectorID != 'x':
-            datos = rq.delete(f'http://127.0.0.1:5000/director/eliminar/exDirectorID')
+            datos = rq.delete(f'http://127.0.0.1:5000/director/eliminar/{exDirectorID}')
             mensaje = datos.text
             print("=====================")
             print(mensaje)
@@ -1015,18 +1109,29 @@ def modificarDirector():
     print("Modificar un Director")
     print("-------------------")
     while True:
-        directorModificar = input("Ingresa el nombre del director que deseas modificar(0 para salir): ")
-        if directorModificar == "":
+        #mostrar los directores disponibles
+        directorData = rq.get("http://127.0.0.1:5000/directores")
+        directores = directorData.json()
+        print("Los directores disponibles son: ")
+        print()
+        for director in directores:
+            print(f'#{director["director"]} con id: {director["idDirector"]}')
+            print()
+            
+        #pedir id
+        idDirectorModificar = input("Ingresa el id del director que deseas modificar(0 para salir): ")
+        if idDirectorModificar == "":
             print("No debes dejar ningun campo vacio")
             input("Enter para continuar.")
-        elif directorModificar == "0":
+        elif idDirectorModificar == "0":
             print("Usted cancelo la accion.")
             input("Enter para continuar...")
             break
         else:
+            system("cls")
             directorNuevo = input("Ingresa el nuevo nombre para el director: ")
-            directorModificado = {"directorNombre": directorNuevo, "iddirector" : "idvacio"}
-            datos = rq.put(f'http://127.0.0.1:5000/director/modificar/{directorModificar}', json=directorModificado)
+            directorModificado = {"director": directorNuevo, "idDirector" : idDirectorModificar}
+            datos = rq.put('http://127.0.0.1:5000/director/modificar', json=directorModificado)
             respuestaFlask = datos.text
             print("=====================")
             print(respuestaFlask)
@@ -1034,17 +1139,21 @@ def modificarDirector():
             input("Enter para continuar.")
             break
 
+#abm generos
+#abm generos
+#abm generos
 
 def menuGenero():
     system("cls")
     opcionMenuGenero = 0
-    while not(opcionMenuGenero>=1 and opcionMenuGenero<=3):
+    while not(opcionMenuGenero>=1 and opcionMenuGenero<=4):
         print("----------------")
         print("Menu ABM Generos")
         print("----------------")
         print("1) Agregar un Genero")
         print("2) Eliminar un Genero")
         print("3) Modificar un Genero")
+        print("4) Salir")
         opcionMenuGenero=int(input("ingresar opcion: "))
         return opcionMenuGenero
 
@@ -1063,7 +1172,7 @@ def agregarGenero():
             input("Enter para continuar...")
             break
         else: 
-            nuevoGenero = {f"generoNombre":generoNuevo,"idgenero": "idvacio"}
+            nuevoGenero = {"generoNombre":generoNuevo,"idgenero": ""}
             datos = rq.post('http://127.0.0.1:5000/genero/crear', json=nuevoGenero)
             respuestaFlask = datos.text
             print("=====================")
@@ -1078,7 +1187,13 @@ def eliminarGenero():
     print("Eliminar un Genero")
     print("-------------------")
     while True:
-        generoEliminar = input("Ingresa el nombre del genero que deseas eliminar(0 para salir): ")
+        #mostrar generos
+        generosData = rq.get('http://127.0.0.1:5000/generos')
+        generos = generosData.json()
+        print('Los generos disponibles son:' )
+        for genero in generos:
+            print(f'nombre: {genero["generoNombre"]}'f'e ID: {genero["idgenero"]}')
+        generoEliminar = input("Ingresa el id del genero que deseas eliminar(0 para salir): ")
         if generoEliminar == "":
             print("No debes dejar ningun campo vacio")
             input("Enter para continuar.")
@@ -1101,7 +1216,14 @@ def modificarGenero():
     print("Modificar un Genero")
     print("-------------------")
     while True:
-        generoModificar = input("Ingresa el nombre del genero que deseas modificar(0 para salir): ")
+        #mostrar generos
+        generosData = rq.get('http://127.0.0.1:5000/generos')
+        generos = generosData.json()
+        print('Los generos disponibles son:' )
+        for genero in generos:
+            print("Nombre: " f'{genero["generoNombre"]} ' "ID: " f'{genero["idgenero"]}')
+        print()
+        generoModificar = input("Ingresa el id del genero que deseas modificar(0 para salir): ")
         if generoModificar == "":
             print("No debes dejar ningun campo vacio")
             input("Enter para continuar.")
@@ -1110,12 +1232,44 @@ def modificarGenero():
             input("Enter para continuar...")
             break
         else:
+            print()
             generoNuevo = input("Ingresa el nuevo nombre para el genero: ")
-            generoModificado = {"generoNombre": generoNuevo, "idgenero" : "idvacio"}
-            datos = rq.put(f'http://127.0.0.1:5000/genero/modificar/{generoModificar}', json=generoModificado)
+            generoModificado = {"generoNombre": generoNuevo, "idgenero" :generoModificar}
+            datos = rq.put(f'http://127.0.0.1:5000/genero/modificar', json=generoModificado)
             respuestaFlask = datos.text
             print("=====================")
             print(respuestaFlask)
             print("=====================")
             input("Enter para continuar.")
             break
+
+#menus extras
+def menuABMpelis():
+    system("cls")
+    opcionMenuPelis = 0
+    while not(opcionMenuPelis>=1 and opcionMenuPelis<=4):
+        print("----------------")
+        print("Menu ABM Pelis")
+        print("----------------")
+        print("1) Agregar una pelicula")
+        print("2) Eliminar una pelicula")
+        print("3) Modificar una pelicula")
+        print("4) Salir")
+        opcionMenuPelis=int(input("ingresar opcion: "))
+        return opcionMenuPelis
+
+def menuABMusuario():
+    system("cls")
+    opcionMenuUsuario = 0
+    while not(opcionMenuUsuario>=1 and opcionMenuUsuario<=6):
+        print("----------------")
+        print("Menu ABM Usuario")
+        print("----------------")
+        print("1) Agregar un usuario")
+        print("2) Eliminar un usuario")
+        print("3) Modificar un usuario")
+        print("4) Dar admin a un usuario")
+        print("5) Quitar admin a un usuario")
+        print("6) Salir")
+        opcionMenuUsuario=int(input("ingresar opcion: "))
+        return opcionMenuUsuario
