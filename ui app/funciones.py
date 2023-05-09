@@ -66,7 +66,7 @@ def inicio_de_sesion():
 def menuUsuarioResgistrado():
     system("cls")
     opcionmenu1 = 0
-    while not(opcionmenu1>=1 and opcionmenu1<=19):
+    while not(opcionmenu1>=1 and opcionmenu1<=14):
         print("---MENU---")
         print("1) Mostrar las peliculas disponibles.")
         print("2) Mostrar las ultimas diez peliculas agregadas.")
@@ -88,7 +88,7 @@ def menuUsuarioResgistrado():
 # menu comentarios
 def menuComentarios():
     opcion = 0
-    while not(opcion>=1 and opcion<=5):
+    while not(opcion>=1 and opcion<=4):
         system("cls")
         print('=====================')
         print("1) Agregar un comentario.")
@@ -1066,7 +1066,7 @@ def sacarAdmin(admin):
             print("===================================================")
             input('Ingrese enter para continuar...')
             system("cls")
-
+#termina ABM usuarios
 def peliculaAleatoria():
     system("cls")
     pelisData = rq.get("http://127.0.0.1:5000/pelis")
